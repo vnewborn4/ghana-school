@@ -29,6 +29,25 @@
 
             <!-- Tier Selection -->
             <div class="row justify-content-center mb-5">
+                
+                <!-- Custom Amount -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <label class="w-100 cursor-pointer h-100">
+                        <input type="radio" name="tier" value="custom" id="customTierRadio" class="d-none peer-radio">
+                        <div class="card adoption-card h-100 p-4 text-center d-flex flex-column">
+                            <h4 class="fw-bold mt-3">Custom</h4>
+                            <div class="my-3">
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" name="custom_amount" id="customAmountInput" class="form-control form-control-lg text-center fw-bold" placeholder="0" min="1">
+                                </div>
+                            </div>
+                            <p class="text-muted mb-4 small">Give whatever you can to support the children.</p>
+                            <div class="mt-auto btn btn-outline-primary select-btn">Select</div>
+                        </div>
+                    </label>
+                </div>
+                
                 <!-- Tier 1 -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <label class="w-100 cursor-pointer h-100">
@@ -69,23 +88,6 @@
                     </label>
                 </div>
 
-                <!-- Custom Amount -->
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <label class="w-100 cursor-pointer h-100">
-                        <input type="radio" name="tier" value="custom" id="customTierRadio" class="d-none peer-radio">
-                        <div class="card adoption-card h-100 p-4 text-center d-flex flex-column">
-                            <h4 class="fw-bold mt-3">Custom</h4>
-                            <div class="my-3">
-                                <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" name="custom_amount" id="customAmountInput" class="form-control form-control-lg text-center fw-bold" placeholder="0" min="1">
-                                </div>
-                            </div>
-                            <p class="text-muted mb-4 small">Give whatever you can to support the children.</p>
-                            <div class="mt-auto btn btn-outline-primary select-btn">Select</div>
-                        </div>
-                    </label>
-                </div>
             </div>
 
             <!-- Step 2: Donor Info -->

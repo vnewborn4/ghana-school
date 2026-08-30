@@ -12,6 +12,7 @@ function nav_active(string $page, string $currentPage): string { return $page ==
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
     <meta name="theme-color" content="#133d34">
     <title><?= htmlspecialchars($pageTitle) ?> | Mill Creek-AR Learning Center</title>
+    <link rel="icon" type="image/svg+xml" href="/ghana-school/assets/images/brand-mark.svg">
     <link rel="stylesheet" href="/ghana-school/assets/css/style.css">
     <script defer src="/ghana-school/assets/js/site.js"></script>
 </head>
@@ -21,7 +22,7 @@ function nav_active(string $page, string $currentPage): string { return $page ==
     <div class="announcement">A learning initiative in Accra, Ghana, in conjunction with the AD2 Alumni Foundation</div>
     <div class="nav-wrap">
         <a class="brand" href="/ghana-school/index.php" aria-label="Mill Creek-AR Learning Center home">
-            <span class="brand-mark" aria-hidden="true">MC</span>
+            <img class="brand-mark" src="/ghana-school/assets/images/brand-mark.svg" alt="" width="46" height="46">
             <span><strong>Mill Creek-AR</strong><small>Learning Center · Accra</small></span>
         </a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><span class="sr-only">Open menu</span></button>

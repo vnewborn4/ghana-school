@@ -1,102 +1,32 @@
-<?php include 'includes/header.php'; ?>
-
-<!-- Hero Section -->
-<section class="hero-section text-center d-flex align-items-center" style="min-height: 80vh;">
-    <div class="container">
-        <h1 class="display-3 fw-bold mb-4 text-shadow">Technology: The Universal Equalizer.</h1>
-        <p class="lead mb-5 fs-3 mx-auto text-shadow" style="max-width: 800px;">
-            It doesn't matter where you were born. A computer doesn't care about your zip code or background. We are equipping the youth of Accra, Ghana with the universal language of technology—leveling the playing field and empowering them to engineer their own futures.
-        </p>
-        <a href="adopt.php" class="btn btn-primary btn-lg fw-bold px-5 py-3 shadow-lg fs-4">Become a Catalyst for Change</a>
-    </div>
+<?php
+$pageTitle = 'Opportunity Changes Everything';
+$pageDescription = 'Help young people in Accra build technology skills, confidence, and pathways to opportunity.';
+include 'includes/header.php';
+?>
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">From Mill Creek to Accra</span>
+    <h1>Talent is everywhere. <em>Opportunity is not.</em></h1>
+    <p>Mill Creek-AR Learning Center gives young people in Accra access to technology, practical instruction, and people who believe in what they can become.</p>
+    <div class="button-row"><a class="button button-gold" href="adopt.php">Sponsor a student journey <span aria-hidden="true">→</span></a><a class="button button-outline" href="#mission">See how it works</a></div>
+  </div>
+  <div class="hero-media">
+    <img src="assets/images/student-2.jpeg" alt="Young learners gathered around laptops during a technology lesson in Accra" width="720" height="1280">
+    <div class="hero-note"><strong>Access. Belief. Training. Opportunity.</strong><br><span>Four ingredients that can change the direction of a life.</span></div>
+  </div>
 </section>
+<section class="trust-strip" aria-label="Program commitments"><div class="trust-grid wrap"><div><span>Our promise</span><strong>Long-term learning, not a one-day giveaway</strong></div><div><span>Location</span><strong>Accra, Ghana</strong></div><div><span>Focus</span><strong>Universal technology skills</strong></div><div><span>Partnership</span><strong>AD2 Alumni Foundation</strong></div></div></section>
 
-<!-- Mission Section -->
-<section class="py-5 bg-white">
-    <div class="container py-5">
-        <div class="row align-items-center mb-5">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <h2 class="fw-bold mb-4 display-5">Genius is Everywhere. <br><span class="text-primary">Opportunity is Not.</span></h2>
-                <p class="lead text-dark fw-semibold">
-                    Do you remember the story of <em>Akeelah and the Bee</em>? It taught us a profound truth: brilliance doesn't care about your zip code, your background, or how much money your parents make. When a child with drive is handed the right tools and a community that believes in them, they can achieve the impossible.
-                </p>
-                <p class="text-muted fs-5">
-                    In the bustling neighborhoods of Accra, Ghana, there are thousands of children with that same unyielding spark. They are future software engineers, data scientists, and digital innovators. But without access to computers, internet, and mentorship, that potential remains locked away.
-                </p>
-                <p class="text-muted fs-5">
-                    Partnering with the <strong>AD2 Alumni Foundation</strong>, we are changing that narrative. We aren't just teaching kids how to code; we are teaching them how to build, how to dream, and how to command their place in the global digital economy. Technology is the great equalizer, and we are handing them the keys.
-                </p>
-                <a href="about.php" class="btn btn-outline-primary btn-lg mt-3 fw-bold px-4">Read Our Origin Story</a>
-            </div>
-            <div class="col-lg-6">
-                <!-- Using one of the uploaded WhatsApp images -->
-                <img src="assets/images/student-2.jpeg" alt="Student learning at Mill Creek-AR Learning Center" class="img-fluid rounded shadow-lg border border-4 border-white">
-            </div>
-        </div>
-    </div>
-</section>
+<section id="mission" class="section"><div class="wrap statement"><span class="eyebrow">The mission</span><h2>A computer can become more than a tool. It can become a <span>doorway.</span></h2><p class="lede" style="margin-inline:auto">We are building a place where curiosity becomes capability—where young people can learn digital fundamentals, practice problem-solving, create projects, and begin to see themselves in the future of work.</p></div></section>
 
-<!-- Impact Section -->
-<section class="py-5 bg-primary text-white text-center">
-    <div class="container py-5">
-        <h2 class="fw-bold mb-5 display-5">What Your Support Actually Does</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="p-4">
-                    <h1 class="display-1 fw-bold mb-3 opacity-50">1</h1>
-                    <h3 class="fw-bold">Digital Literacy</h3>
-                    <p class="fs-5">We take students who have never touched a keyboard and transform them into confident digital citizens, ready for the modern workforce.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-4">
-                    <h1 class="display-1 fw-bold mb-3 opacity-50">2</h1>
-                    <h3 class="fw-bold">Global Competitiveness</h3>
-                    <p class="fs-5">By teaching universal programming languages and tech skills, we give these young minds the ability to compete for jobs on a global scale, right from Ghana.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-4">
-                    <h1 class="display-1 fw-bold mb-3 opacity-50">3</h1>
-                    <h3 class="fw-bold">Breaking the Cycle</h3>
-                    <p class="fs-5">A single tech job can lift an entire family out of poverty. Your donation doesn't just buy a computer; it breaks generational cycles of hardship.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<section class="section cream"><div class="wrap grid-2">
+  <div><span class="eyebrow">One story, two places</span><h2>From humble beginnings in Mill Creek to a classroom in Accra.</h2><div class="route-line"><div class="route-stop"><small>Mill Creek, Arkansas</small><h3>A beginning shaped by limited resources and a strong community.</h3><p>The founder’s path from rural Arkansas to engineering showed what education, persistence, and a few people willing to believe can make possible.</p></div><div class="route-stop"><small>Accra, Ghana</small><h3>A commitment to extend that same bridge.</h3><p>The learning center exists so a young person’s starting point does not have to determine how far they can go.</p></div></div><a class="button button-outline" href="about.php">Read the origin story</a></div>
+  <div class="photo-card"><img src="assets/images/student-3.jpeg" alt="An instructor supporting a learner at a laptop" width="720" height="1280" loading="lazy"><div class="photo-caption">“Invest in a journey, not just a classroom.”</div></div>
+</div></section>
 
-<!-- Showcase Gallery -->
-<section class="py-5 bg-light">
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold display-5">Witness the Transformation</h2>
-            <p class="lead text-muted mx-auto" style="max-width: 700px;">Every line of code written, every program successfully launched—these are the moments where confidence is born. See the faces of the next generation of innovators.</p>
-        </div>
-        <div class="row g-4">
-            <?php 
-            // Scan the images directory to dynamically load the gallery
-            $dir = "assets/images/";
-            $images = glob($dir . "*.{jpg,jpeg,png,gif}", GLOB_BRACE);
-            foreach($images as $image): 
-            ?>
-            <div class="col-md-4">
-                <img src="<?php echo $image; ?>" alt="Student Showcase" class="gallery-img shadow-sm w-100">
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
+<section class="section"><div class="wrap"><div class="statement"><span class="eyebrow">What support makes possible</span><h2>A journey from first click to future-ready confidence.</h2></div><div class="grid-3" style="margin-top:50px"><article class="impact-card"><span class="number">01</span><h3>Access to tools</h3><p>Reliable time with computers, connectivity, and learning resources—the foundation for meaningful practice.</p></article><article class="impact-card"><span class="number">02</span><h3>Skills that travel</h3><p>Digital literacy, critical thinking, creation, and collaboration that can transfer across industries and borders.</p></article><article class="impact-card"><span class="number">03</span><h3>A wider horizon</h3><p>Mentorship and project experience that help students imagine—and prepare for—education, entrepreneurship, and work.</p></article></div></div></section>
 
-<!-- Call to Action -->
-<section class="py-5" style="background: linear-gradient(135deg, #212529, #000); color: white;">
-    <div class="container py-5 text-center">
-        <h2 class="fw-bold mb-4 display-4">Don't Just Watch the Future. Shape It.</h2>
-        <p class="lead mb-5 mx-auto fs-4" style="max-width: 800px;">
-            The difference between a brilliant mind lost to circumstance and a brilliant mind that changes the world is often just one person deciding to care. Be that person today.
-        </p>
-        <a href="adopt.php" class="btn btn-primary btn-lg fw-bold px-5 py-3 shadow-lg fs-4">Adopt a Child's Journey Now</a>
-    </div>
-</section>
+<section id="students" class="section forest"><div class="wrap"><div class="grid-2"><div><span class="eyebrow light">Learning in motion</span><h2>Show the work. Protect the child.</h2></div><p class="lede" style="color:#d7e3df">Student stories center learning, effort, and growth. We do not publish full names, personal hardship details, or private contact information. Images should be used only with documented guardian consent.</p></div><div class="learning-grid" style="margin-top:45px"><article class="learning-card"><img src="assets/images/student-1.jpeg" alt="A group of students practicing computer skills together" loading="lazy"><div class="overlay"><strong>Collaborative learning</strong><br><span>Students learn by trying, asking, helping, and building together.</span></div></article><article class="learning-card"><img src="assets/images/student-3.jpeg" alt="A learner receiving guidance during a computer lesson" loading="lazy"><div class="overlay"><strong>Guided practice</strong></div></article><article class="learning-card"><div class="learning-placeholder"><span class="icon" aria-hidden="true">↗</span><h3>Project milestone slot</h3><p>Add a verified, consented project story here—what was built, which skill was practiced, and what comes next.</p></div></article></div><div class="privacy-note"><strong>Safeguarding note:</strong> Before public launch, confirm written media consent for every identifiable child shown. If consent cannot be verified, replace the image with a non-identifying classroom or project photo.</div></div></section>
 
+<section class="section"><div class="wrap partnership" id="partnership"><span class="eyebrow light">Partnership and accountability</span><h2>Local learning. Shared commitment.</h2><p class="lede">Mill Creek-AR Learning Center works in conjunction with the AD2 Alumni Foundation. This partnership connects the founder’s vision with a community committed to education, self-determination, and lifting as we climb.</p><p>Before accepting live donations, this section should link to the foundation’s verified nonprofit information, donation policies, and reporting commitments.</p><a class="button button-light" href="adopt.php">Explore sponsorship</a></div></section>
 <?php include 'includes/footer.php'; ?>

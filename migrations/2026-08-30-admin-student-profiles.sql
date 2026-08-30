@@ -1,0 +1,12 @@
+USE ghana_school;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin TINYINT(1) NOT NULL DEFAULT 0 AFTER password_hash;
+ALTER TABLE student_journeys ADD COLUMN IF NOT EXISTS first_name VARCHAR(60) NULL AFTER public_code;
+ALTER TABLE student_journeys ADD COLUMN IF NOT EXISTS favorite_subject VARCHAR(120) NOT NULL DEFAULT '' AFTER profile_summary;
+ALTER TABLE student_journeys ADD COLUMN IF NOT EXISTS strengths VARCHAR(180) NOT NULL DEFAULT '' AFTER favorite_subject;
+ALTER TABLE student_journeys ADD COLUMN IF NOT EXISTS aspirations VARCHAR(180) NOT NULL DEFAULT '' AFTER strengths;
+UPDATE student_journeys SET first_name=CASE public_code WHEN 'creative-coder' THEN 'Student A' WHEN 'digital-builder' THEN 'Student B' WHEN 'future-analyst' THEN 'Student C' ELSE SUBSTRING_INDEX(display_name,' ',1) END WHERE first_name IS NULL OR first_name='';
+UPDATE student_journeys SET display_name=first_name;
+ALTER TABLE student_journeys MODIFY first_name VARCHAR(60) NOT NULL;
+UPDATE student_journeys SET favorite_subject='Creative technology',strengths='Curiosity and visual thinking',aspirations='Create an original digital project' WHERE public_code='creative-coder';
+UPDATE student_journeys SET favorite_subject='Computing',strengths='Problem-solving and persistence',aspirations='Build a useful website' WHERE public_code='digital-builder';
+UPDATE student_journeys SET favorite_subject='Mathematics',strengths='Organization and clear communication',aspirations='Continue into advanced technology study' WHERE public_code='future-analyst';

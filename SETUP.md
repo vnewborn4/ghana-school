@@ -24,6 +24,15 @@ Before launch, add success and cancellation URLs at the provider, configure a we
 
 The local portal supports account signup, sign-in, journey selection, pending sponsorship records, contribution status, and privacy-safe learning updates. Passwords are hashed and forms use CSRF protection.
 
+### Enable an administrator
+
+1. Create a normal account through the sponsorship signup flow.
+2. Run the migration in `migrations/2026-08-30-admin-student-profiles.sql` once on an existing database.
+3. Promote the approved account directly in the database: `UPDATE users SET is_admin=1 WHERE email='approved-admin@example.org';`
+4. Sign out and sign back in, then open `/ghana-school/admin.php`.
+
+Administrator access is deliberately never granted to the first signup automatically. The protected workspace can add first-name-only student profiles, hide or publish them for selection, and publish reviewed sponsor updates. Do not enter surnames or sensitive child information.
+
 Before public launch, require HTTPS; add email verification, password reset, rate limiting, secure production session settings, privacy/retention terms, and an administrator-only workflow for reviewing and publishing updates. Replace every starter update with verified program content. Payment webhooks—not browser redirects—must be the only process allowed to mark a sponsorship active or completed.
 
 ## Required content review before publication

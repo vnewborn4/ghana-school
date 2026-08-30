@@ -16,4 +16,9 @@ function is_logged_in(): bool { return !empty($_SESSION['user_id']); }
 function login_user(int $userId): void { session_regenerate_id(true); $_SESSION['user_id'] = $userId; }
 function logout_user(): void { $_SESSION = []; if (ini_get('session.use_cookies')) { $p=session_get_cookie_params(); setcookie(session_name(),'',time()-42000,$p['path'],$p['domain'],$p['secure'],$p['httponly']); } session_destroy(); }
 function require_user(): int { if (!is_logged_in()) { header('Location: login.php?return=portal.php'); exit; } return (int)$_SESSION['user_id']; }
+function require_admin(): int {
+    $id=require_user(); require_once __DIR__.'/db.php'; $stmt=db()->prepare('SELECT is_admin FROM users WHERE id=?'); $stmt->execute([$id]);
+    if((int)($stmt->fetchColumn() ?: 0)!==1){ http_response_code(403); exit('Administrator access is required.'); }
+    return $id;
+}
 function safe_return_path(string $fallback='portal.php'): string { $path=$_POST['return'] ?? $_GET['return'] ?? ''; return in_array($path,['portal.php','adopt.php'],true) ? $path : $fallback; }

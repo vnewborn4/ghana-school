@@ -23,13 +23,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/ghana-school/index.php">Home</a>
+                        <a class="nav-link fw-semibold" href="/ghana-school/index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/ghana-school/about.php">Our Story</a>
+                        <a class="nav-link fw-semibold" href="/ghana-school/about.php">Our Story</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary ms-3 fw-bold" href="/ghana-school/adopt.php">Adopt a Journey</a>
+                        <a class="nav-link fw-semibold" href="/ghana-school/bio.php">Meet the Founder</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/ghana-school/impact.php">The Impact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary ms-3 fw-bold shadow-sm" href="/ghana-school/adopt.php">Adopt a Journey</a>
                     </li>
                 </ul>
             </div>

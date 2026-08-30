@@ -3,9 +3,9 @@
 <!-- Hero Section -->
 <section class="hero-section text-center d-flex align-items-center" style="min-height: 80vh;">
     <div class="container">
-        <h1 class="display-3 fw-bold mb-4 text-shadow">Unlocking Potential. Engineering Futures.</h1>
+        <h1 class="display-3 fw-bold mb-4 text-shadow">Technology: The Universal Equalizer.</h1>
         <p class="lead mb-5 fs-3 mx-auto text-shadow" style="max-width: 800px;">
-            The Mill Creek-AR Learning Center is bridging the gap between raw talent and limitless opportunity. We are equipping the youth of Accra, Ghana with the universal language of technology—empowering them to rewrite their own destinies.
+            It doesn't matter where you were born. A computer doesn't care about your zip code or background. We are equipping the youth of Accra, Ghana with the universal language of technology—leveling the playing field and empowering them to engineer their own futures.
         </p>
         <a href="adopt.php" class="btn btn-primary btn-lg fw-bold px-5 py-3 shadow-lg fs-4">Become a Catalyst for Change</a>
     </div>

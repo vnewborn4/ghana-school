@@ -3,9 +3,9 @@
 <!-- Hero Section -->
 <section class="py-5 bg-dark text-white text-center" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('assets/images/student-1.jpeg') center/cover;">
     <div class="container py-5">
-        <h1 class="display-3 fw-bold mb-4">The Challenge & The Change</h1>
+        <h1 class="display-3 fw-bold mb-4">The Universal Equalizer</h1>
         <p class="lead mb-0 fs-3 mx-auto" style="max-width: 800px;">
-            In Ghana, brilliance is abundant, but digital access is a privilege. See how a single laptop can change the trajectory of an entire family.
+            Code is a universal language. It levels the global playing field. See how a single laptop and tech education can change the trajectory of an entire family.
         </p>
     </div>
 </section>

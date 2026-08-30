@@ -4,7 +4,7 @@
     <div class="container py-5">
         <div class="text-center mb-5">
             <h1 class="display-4 fw-bold mb-3">Meet the Founder</h1>
-            <p class="lead text-muted max-w-700 mx-auto">Making a Way Out of No Way.</p>
+            <p class="lead text-muted max-w-700 mx-auto">Finding the Universal Equalizer: Making a Way Out of No Way.</p>
         </div>
 
         <div class="row align-items-center mb-5 pb-4 border-bottom">
@@ -21,7 +21,7 @@
                     I am an engineer by trade, but my foundation was laid on the dirt roads of Mill Creek, Arkansas. I grew up in a place where resources were scarce, but community was strong. My story is woven from a deep African American cultural tradition—the tradition of "making a way out of no way."
                 </p>
                 <p class="fs-5 text-muted">
-                    Our ancestors faced insurmountable odds, yet they built futures with their bare hands, sheer resilience, and an unshakeable faith in the generations to come. They instilled in me the grit required to look at closed doors and figure out how to take them off the hinges. That resilience propelled me out of poverty and through the rigorous journey of becoming a professional engineer.
+                    Our ancestors faced insurmountable odds, yet they built futures with their bare hands, sheer resilience, and an unshakeable faith in the generations to come. They instilled in me the grit required to look at closed doors and figure out how to take them off the hinges. That resilience propelled me out of poverty and through the rigorous journey of becoming a professional engineer. I discovered early on that technology is the ultimate universal equalizer—a tool that doesn't judge your zip code, only your output.
                 </p>
                 <p class="fs-5 text-muted">
                     But as the African proverb says, <em>"If you want to go fast, go alone. If you want to go far, go together."</em> 

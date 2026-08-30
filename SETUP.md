@@ -22,6 +22,6 @@ Before launch, add success and cancellation URLs at the provider, configure a we
 
 - Replace Van Newborn's portrait placeholder and add his verified credentials and approved biography.
 - Confirm written guardian/media consent for every identifiable student image; otherwise replace it with a non-identifying classroom or project image.
-- Add verified AD2 Alumni Foundation legal/nonprofit details, privacy policy, donation/refund terms, mailing address, and contact information.
+- Confirm the AD2 Alumni Foundation's current tax status, EIN, leadership, official contact information, privacy policy, donation/refund terms, and reporting commitments before live fundraising.
 - Replace general support examples with approved program costs or an audited allocation statement before describing what specific dollar amounts fund.
 - Review all safeguarding language with local leadership and the foundation.

@@ -31,6 +31,7 @@ function nav_active(string $page, string $currentPage): string { return $page ==
             <a<?= nav_active('about.php', $currentPage) ?> href="/ghana-school/about.php">Our story</a>
             <a<?= nav_active('impact.php', $currentPage) ?> href="/ghana-school/impact.php">Why technology</a>
             <a<?= nav_active('bio.php', $currentPage) ?> href="/ghana-school/bio.php">Founder</a>
+            <a<?= nav_active('foundation.php', $currentPage) ?> href="/ghana-school/foundation.php">Partnership</a>
             <a<?= nav_active('adopt.php', $currentPage) ?> href="/ghana-school/adopt.php">Sponsor a journey</a>
         </nav>
     </div>

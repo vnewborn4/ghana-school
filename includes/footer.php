@@ -6,7 +6,7 @@
     </div>
     <div class="footer-grid wrap">
         <div><a class="brand footer-brand" href="/ghana-school/index.php"><img class="brand-mark" src="/ghana-school/assets/images/brand-mark.svg" alt="" width="46" height="46"><span><strong>Mill Creek-AR</strong><small>Learning Center · Accra</small></span></a><p>Expanding access to technology skills, mentorship, and possibility for young people in Accra, Ghana.</p></div>
-        <div><h3>Explore</h3><a href="/ghana-school/about.php">Our story</a><a href="/ghana-school/impact.php">Why technology</a><a href="/ghana-school/bio.php">Meet the founder</a></div>
+        <div><h3>Explore</h3><a href="/ghana-school/about.php">Our story</a><a href="/ghana-school/impact.php">Why technology</a><a href="/ghana-school/bio.php">Meet the founder</a><a href="/ghana-school/foundation.php">AD² partnership</a></div>
         <div><h3>Take action</h3><a href="/ghana-school/adopt.php">Sponsor a journey</a><a href="/ghana-school/index.php#students">Student learning</a><a href="/ghana-school/index.php#partnership">Our partnership</a></div>
         <div><h3>Trust & safeguarding</h3><p>Student dignity, privacy, and safety come before storytelling. Contributions are processed only through a configured secure payment provider.</p></div>
     </div>

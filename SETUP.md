@@ -20,7 +20,7 @@ Before launch, add success and cancellation URLs at the provider, configure a we
 
 ## Required content review before publication
 
-- Replace the founder portrait placeholder and add the founder's verified name, credentials, and approved biography.
+- Replace Van Newborn's portrait placeholder and add his verified credentials and approved biography.
 - Confirm written guardian/media consent for every identifiable student image; otherwise replace it with a non-identifying classroom or project image.
 - Add verified AD2 Alumni Foundation legal/nonprofit details, privacy policy, donation/refund terms, mailing address, and contact information.
 - Replace general support examples with approved program costs or an audited allocation statement before describing what specific dollar amounts fund.

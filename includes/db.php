@@ -1,15 +1,15 @@
 <?php
-$host = 'localhost';
-$dbname = 'ghana_school';
-$username = 'root'; // Default XAMPP username
-$password = ''; // Default XAMPP password
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    // If the database doesn't exist yet, we don't want to completely break the site, 
-    // but we should log or display a message
-    die("Database Connection failed: " . $e->getMessage() . ". Please ensure you have imported database.sql in phpMyAdmin.");
+function db(): PDO {
+    static $pdo = null;
+    if ($pdo instanceof PDO) return $pdo;
+    $host = getenv('GHANA_DB_HOST') ?: '127.0.0.1';
+    $name = getenv('GHANA_DB_NAME') ?: 'ghana_school';
+    $user = getenv('GHANA_DB_USER') ?: 'root';
+    $password = getenv('GHANA_DB_PASSWORD') ?: '';
+    $pdo = new PDO("mysql:host={$host};dbname={$name};charset=utf8mb4", $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ]);
+    return $pdo;
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/auth.php';
 $pageTitle = $pageTitle ?? 'Mill Creek-AR Learning Center';
 $pageDescription = $pageDescription ?? 'Technology education and mentorship for young people in Accra, Ghana.';
 $currentPage = basename($_SERVER['PHP_SELF'] ?? 'index.php');
@@ -32,6 +33,7 @@ function nav_active(string $page, string $currentPage): string { return $page ==
             <a<?= nav_active('impact.php', $currentPage) ?> href="/ghana-school/impact.php">Why technology</a>
             <a<?= nav_active('bio.php', $currentPage) ?> href="/ghana-school/bio.php">Founder</a>
             <a<?= nav_active('foundation.php', $currentPage) ?> href="/ghana-school/foundation.php">Partnership</a>
+            <?php if(is_logged_in()): ?><a<?= nav_active('portal.php', $currentPage) ?> href="/ghana-school/portal.php">My dashboard</a><?php else: ?><a<?= nav_active('login.php', $currentPage) ?> href="/ghana-school/login.php">Sign in</a><?php endif; ?>
             <a<?= nav_active('adopt.php', $currentPage) ?> href="/ghana-school/adopt.php">Sponsor a journey</a>
         </nav>
     </div>

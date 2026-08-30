@@ -4,7 +4,9 @@
 
 1. Start Apache in XAMPP.
 2. Open `http://localhost/ghana-school/`.
-3. No database is required for the public site or pre-launch sponsorship review.
+3. Import `database.sql` through phpMyAdmin (or run it with the XAMPP MariaDB client) to create the sponsorship portal tables and privacy-safe starter journeys.
+
+The local defaults use database `ghana_school`, user `root`, and an empty password. For any shared or hosted environment, set `GHANA_DB_HOST`, `GHANA_DB_NAME`, `GHANA_DB_USER`, and `GHANA_DB_PASSWORD` outside source control and use a dedicated least-privilege database account.
 
 ## Connect secure recurring payments
 
@@ -17,6 +19,12 @@ The site never handles card data. Create verified hosted payment links in Stripe
 Each hosted link must already contain the correct amount and recurring/one-time setting. Custom amounts intentionally remain in pre-launch mode until a server-side Checkout Session/API implementation is added.
 
 Before launch, add success and cancellation URLs at the provider, configure a webhook endpoint, verify webhook signatures, record completed gifts in a protected database or donor system, and test in the provider sandbox. Keep all secret keys outside source control.
+
+## Sponsor accounts and updates
+
+The local portal supports account signup, sign-in, journey selection, pending sponsorship records, contribution status, and privacy-safe learning updates. Passwords are hashed and forms use CSRF protection.
+
+Before public launch, require HTTPS; add email verification, password reset, rate limiting, secure production session settings, privacy/retention terms, and an administrator-only workflow for reviewing and publishing updates. Replace every starter update with verified program content. Payment webhooks—not browser redirects—must be the only process allowed to mark a sponsorship active or completed.
 
 ## Required content review before publication
 

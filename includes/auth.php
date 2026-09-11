@@ -1,6 +1,17 @@
 <?php
+if (!defined('BASE_PATH')) {
+    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+    define('BASE_PATH', ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/'));
+}
+
+function app_url(string $path = ''): string {
+    $clean = ltrim($path, '/');
+    return ($clean === '') ? (BASE_PATH ?: '/') : (BASE_PATH . '/' . $clean);
+}
+
 if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_set_cookie_params(['httponly'=>true,'samesite'=>'Lax','secure'=>!empty($_SERVER['HTTPS']),'path'=>'/ghana-school/']);
+    $cookiePath = BASE_PATH !== '' ? BASE_PATH . '/' : '/';
+    session_set_cookie_params(['httponly'=>true,'samesite'=>'Lax','secure'=>!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off','path'=>$cookiePath]);
     session_start();
 }
 function csrf_token(): string {

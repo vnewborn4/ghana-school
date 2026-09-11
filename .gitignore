@@ -1,0 +1,26 @@
+# Environment & Local Configuration
+.env
+.env.local
+.env.*.local
+
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
+
+# Editor & IDE Directories
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Logs and Runtime
+*.log
+error_log
+php_errors.log

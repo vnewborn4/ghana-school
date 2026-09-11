@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS sponsorships (
     student_journey_id INT UNSIGNED NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     frequency ENUM('monthly','one-time') NOT NULL,
-    payment_provider ENUM('stripe','paypal') NOT NULL,
+    payment_provider ENUM('zeffy','stripe','paypal') NOT NULL DEFAULT 'zeffy',
     status ENUM('pending','active','paused','completed','cancelled','failed') NOT NULL DEFAULT 'pending',
     provider_reference VARCHAR(255) NULL,
     next_payment_at DATETIME NULL,
@@ -54,6 +54,16 @@ CREATE TABLE IF NOT EXISTS student_updates (
     visible TINYINT(1) NOT NULL DEFAULT 1,
     CONSTRAINT fk_update_journey FOREIGN KEY (student_journey_id) REFERENCES student_journeys(id) ON DELETE CASCADE,
     INDEX idx_update_journey_date (student_journey_id, published_at)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS password_resets (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    token_hash VARCHAR(64) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_token_hash (token_hash),
+    CONSTRAINT fk_password_reset_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 INSERT INTO student_journeys (public_code,first_name,display_name,age_band,interest_area,current_focus,profile_summary,favorite_subject,strengths,aspirations) VALUES

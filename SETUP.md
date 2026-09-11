@@ -8,9 +8,25 @@
 
 The local defaults use database `ghana_school`, user `root`, and an empty password. For any shared or hosted environment, set `GHANA_DB_HOST`, `GHANA_DB_NAME`, `GHANA_DB_USER`, and `GHANA_DB_PASSWORD` outside source control and use a dedicated least-privilege database account.
 
-## Connect secure recurring payments
+## Connect Zeffy recurring donations
 
-The site never handles card data. Create verified hosted payment links in Stripe or PayPal, then expose their HTTPS URLs to Apache/PHP as environment variables. The naming pattern is:
+Zeffy is the default donation provider. The site creates the donor account and pending sponsorship record, then sends the donor to the foundation's secure Zeffy Donation Campaign. Card and bank information is never collected by this site.
+
+1. An authorized AD2 Alumni Foundation representative creates or signs in to the verified Zeffy organization account.
+2. Create a **Donation Campaign** for the Mill Creek-AR Learning Center sponsorship program.
+3. Enable **monthly** and **one-time** frequencies. Add the site's suggested amounts ($25, $50, and $100) and approved impact descriptions.
+4. Add a required custom question such as **Student journey first name or code** so staff can reconcile the gift with the pending sponsor-dashboard record. Do not request a child's surname or other sensitive information.
+5. Publish the campaign, open **Campaigns -> Share**, and copy its full HTTPS campaign link.
+6. Set that link for Apache/PHP as `ZEFFY_DONATION_FORM_URL`. A valid value begins with `https://www.zeffy.com/`.
+7. Restart Apache and complete an authorized test donation. Verify the Zeffy receipt and reconcile the pending site record before launch.
+
+Run `migrations/2026-08-30-zeffy-provider.sql` once on an existing database. New installations receive Zeffy support from `database.sql` automatically.
+
+The campaign link is kept outside source code so an unreviewed test campaign is not published accidentally. The site does not claim automatic Zeffy synchronization: staff must verify transactions in Zeffy and update sponsorship status through a reviewed administrative process.
+
+### Optional Stripe or PayPal links
+
+Stripe and PayPal remain available as optional fallbacks. Create verified hosted payment links, then expose their HTTPS URLs to Apache/PHP as environment variables. The naming pattern is:
 
 - `STRIPE_MONTHLY_25_URL`, `STRIPE_MONTHLY_50_URL`, `STRIPE_MONTHLY_100_URL`
 - `STRIPE_ONE_TIME_25_URL`, `STRIPE_ONE_TIME_50_URL`, `STRIPE_ONE_TIME_100_URL`
@@ -18,7 +34,7 @@ The site never handles card data. Create verified hosted payment links in Stripe
 
 Each hosted link must already contain the correct amount and recurring/one-time setting. Custom amounts intentionally remain in pre-launch mode until a server-side Checkout Session/API implementation is added.
 
-Before launch, add success and cancellation URLs at the provider, configure a webhook endpoint, verify webhook signatures, record completed gifts in a protected database or donor system, and test in the provider sandbox. Keep all secret keys outside source control.
+For Stripe or PayPal, add success and cancellation URLs, configure a webhook endpoint, verify webhook signatures, record completed gifts in a protected database or donor system, and test in the provider sandbox. Keep all secret keys outside source control.
 
 ## Sponsor accounts and updates
 

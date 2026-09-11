@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-labelledby="title description">
+  <title id="title">Mill Creek-AR Learning Center logo</title>
+  <desc id="description">A gold bridge and rising light above the words Mill Creek-AR Learning Center, Accra.</desc>
+  <rect width="1200" height="1200" rx="120" fill="#f6f0e4"/>
+  <circle cx="600" cy="410" r="245" fill="#133d34"/>
+  <circle cx="600" cy="410" r="233" fill="none" stroke="#f6f0e4" stroke-opacity=".28" stroke-width="8"/>
+  <path d="M450 490c62 0 70-145 150-145s88 145 150 145" fill="none" stroke="#f0b84b" stroke-width="38" stroke-linecap="round"/>
+  <path d="M480 535h240" fill="none" stroke="#f6f0e4" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="450" cy="490" r="29" fill="#f6f0e4"/>
+  <circle cx="750" cy="490" r="29" fill="#f6f0e4"/>
+  <path d="M600 285v55M560 300l18 40M640 300l-18 40" fill="none" stroke="#f6f0e4" stroke-width="19" stroke-linecap="round"/>
+  <text x="600" y="770" fill="#133d34" font-family="Georgia, 'Times New Roman', serif" font-size="92" font-weight="700" text-anchor="middle">Mill Creek-AR</text>
+  <path d="M300 825h600" stroke="#f0b84b" stroke-width="8" stroke-linecap="round"/>
+  <text x="600" y="900" fill="#133d34" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" letter-spacing="7" text-anchor="middle">LEARNING CENTER</text>
+  <text x="600" y="970" fill="#1d5749" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="700" letter-spacing="9" text-anchor="middle">ACCRA, GHANA</text>
+  <text x="600" y="1055" fill="#5b6762" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="600" text-anchor="middle">From Mill Creek to Accra</text>
+</svg>

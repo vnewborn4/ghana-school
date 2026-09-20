@@ -58,3 +58,7 @@ Before public launch, require HTTPS; add email verification, password reset, rat
 - Confirm the AD2 Alumni Foundation's current tax status, EIN, leadership, official contact information, privacy policy, donation/refund terms, and reporting commitments before live fundraising.
 - Replace general support examples with approved program costs or an audited allocation statement before describing what specific dollar amounts fund.
 - Review all safeguarding language with local leadership and the foundation.
+
+## Claude Code graph memory
+
+The project ships a `.mcp.json` that loads the official MCP knowledge-graph memory server (`@modelcontextprotocol/server-memory`) in Claude Code sessions. The graph is stored at `.claude/memory.jsonl` (one JSON object per line) so it lives inside the repository. Sessions can record entities, relations, and observations about the project and recall them later. Because remote Claude Code containers are ephemeral, commit `.claude/memory.jsonl` after a session adds anything worth keeping — only committed changes persist to future sessions.

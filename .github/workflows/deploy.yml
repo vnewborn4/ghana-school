@@ -22,8 +22,9 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          # Use Ghana account credentials by default; override for other deployments
+          username: ${{ secrets.FTP_USERNAME_GHANA || secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD_GHANA || secrets.FTP_PASSWORD }}
           # Use "ftps" (encrypted) whenever the host supports it; change to
           # "ftp" only if the server cannot do FTPS.
           protocol: ftps

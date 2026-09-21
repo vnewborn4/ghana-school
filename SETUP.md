@@ -59,6 +59,17 @@ Before public launch, require HTTPS; add email verification, password reset, rat
 - Replace general support examples with approved program costs or an audited allocation statement before describing what specific dollar amounts fund.
 - Review all safeguarding language with local leadership and the foundation.
 
+## Automatic deployment on merge to main
+
+`.github/workflows/deploy.yml` uploads the site to the web server over FTPS whenever a change is pushed or merged to `main` (it can also be run manually from the Actions tab). Configure it in the GitHub repository under **Settings -> Secrets and variables -> Actions**:
+
+- Secret `FTP_SERVER` — the FTP host, e.g. `ftp.example.org`.
+- Secret `FTP_USERNAME` — the FTP account username.
+- Secret `FTP_PASSWORD` — the FTP account password.
+- Variable `FTP_SERVER_DIR` — remote directory to deploy into, ending with a slash, e.g. `public_html/`. Defaults to the FTP account's root when unset.
+
+Use a dedicated FTP account restricted to the site directory, and prefer FTPS (the default in the workflow); only fall back to plain `ftp` if the host cannot do FTPS. The sync excludes development files (`.github/`, `.claude/`, `.mcp.json`, `SETUP.md`, `database.sql`, `migrations/`). Database changes are not deployed automatically — run new files in `migrations/` on the server database manually.
+
 ## Claude Code graph memory
 
 The project ships a `.mcp.json` that loads the official MCP knowledge-graph memory server (`@modelcontextprotocol/server-memory`) in Claude Code sessions. The graph is stored at `.claude/memory.jsonl` (one JSON object per line) so it lives inside the repository. Sessions can record entities, relations, and observations about the project and recall them later. Because remote Claude Code containers are ephemeral, commit `.claude/memory.jsonl` after a session adds anything worth keeping — only committed changes persist to future sessions.

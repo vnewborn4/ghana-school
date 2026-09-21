@@ -28,10 +28,9 @@ jobs:
           # Use "ftps" (encrypted) whenever the host supports it; change to
           # "ftp" only if the server cannot do FTPS.
           protocol: ftps
-          # Remote directory to deploy into. Set the FTP_SERVER_DIR repository
-          # variable (Settings -> Secrets and variables -> Actions -> Variables),
-          # e.g. "public_html/" — it must end with a slash.
-          server-dir: ${{ vars.FTP_SERVER_DIR || './' }}
+          # Remote directory to deploy into. For Ghana, uses /www/millcreek-ar-learning.com/
+          # For global account, override via FTP_SERVER_DIR variable. Path must end with a slash.
+          server-dir: ${{ vars.FTP_SERVER_DIR || '/www/millcreek-ar-learning.com/' }}
           # Development-only files that must never reach the live server.
           exclude: |
             **/.git*

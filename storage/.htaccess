@@ -1,0 +1,16 @@
+# Private storage: student site files and assignment uploads.
+# These are streamed by students/serve.php and the staff download script,
+# never served directly. Prefer moving this directory above the document
+# root and pointing GHANA_STORAGE_PATH at it -- this file is a fallback.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>
+Options -Indexes -ExecCGI
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8

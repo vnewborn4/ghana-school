@@ -5,8 +5,11 @@
 
 // Enforce HTTPS in production
 if (!empty($_SERVER['HTTP_HOST']) && empty($_SERVER['HTTPS'])) {
-    // Don't redirect on localhost or if already on HTTPS
-    if (getenv('APP_ENV') === 'production' || !in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1'])) {
+    // Don't redirect on localhost or if already on HTTPS. The host header
+    // carries the port on a local server (localhost:8080), so compare the
+    // hostname alone.
+    $localHost = strtolower(parse_url('http://' . $_SERVER['HTTP_HOST'], PHP_URL_HOST) ?? '');
+    if (getenv('APP_ENV') === 'production' || !in_array($localHost, ['localhost', '127.0.0.1', '[::1]', '::1'], true)) {
         header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 301);
         exit;
     }

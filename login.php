@@ -1,11 +1,11 @@
 <?php
 require_once 'includes/auth.php'; require_once 'includes/db.php';
-if(is_logged_in()){ header('Location: portal.php'); exit; }
+if(is_logged_in()){ header('Location: '.app_url(safe_return_path())); exit; }
 $error='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
   verify_csrf(); $email=strtolower(trim((string)($_POST['email'] ?? ''))); $password=(string)($_POST['password'] ?? '');
   $stmt=db()->prepare('SELECT id,password_hash FROM users WHERE email=?'); $stmt->execute([$email]); $user=$stmt->fetch();
-  if($user && password_verify($password,$user['password_hash'])){ login_user((int)$user['id']); header('Location: '.safe_return_path()); exit; }
+  if($user && password_verify($password,$user['password_hash'])){ login_user((int)$user['id']); header('Location: '.app_url(safe_return_path())); exit; }
   $error='Email or password was not recognized.';
 }
 $pageTitle='Sponsor Sign In'; $pageDescription='Sign in to view sponsorship status and student learning updates.'; include 'includes/header.php';

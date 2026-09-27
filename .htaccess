@@ -6,6 +6,16 @@
     RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
     RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Student web spaces. Nothing under /students/ is a real directory: the
+    # files live outside the document root and are streamed by serve.php, so
+    # the server never executes anything a learner saved.
+    # The preview rules must stay above the published ones, or "preview"
+    # would be read as a student slug.
+    RewriteRule ^students/preview/([a-z0-9-]+)/?$      students/serve.php?s=$1&v=draft&f=index.html [L,QSA]
+    RewriteRule ^students/preview/([a-z0-9-]+)/(.+)$   students/serve.php?s=$1&v=draft&f=$2          [L,QSA]
+    RewriteRule ^students/([a-z0-9-]+)/?$              students/serve.php?s=$1&f=index.html          [L,QSA]
+    RewriteRule ^students/([a-z0-9-]+)/(.+)$           students/serve.php?s=$1&f=$2                  [L,QSA]
 </IfModule>
 
 <IfModule mod_headers.c>

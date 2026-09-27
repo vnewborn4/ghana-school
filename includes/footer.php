@@ -7,7 +7,7 @@
     <div class="footer-grid wrap">
         <div><a class="brand footer-brand" href="<?= app_url('index.php') ?>"><img class="brand-mark" src="<?= app_url('assets/images/brand-mark.svg') ?>" alt="" width="46" height="46"><span><strong>Mill Creek-AR</strong><small>Learning Center · Accra</small></span></a><p>Expanding access to technology skills, mentorship, and possibility for young people in Accra, Ghana.</p></div>
         <div><h3>Explore</h3><a href="<?= app_url('about.php') ?>">Our story</a><a href="<?= app_url('impact.php') ?>">Why technology</a><a href="<?= app_url('bio.php') ?>">Meet the founder</a><a href="<?= app_url('foundation.php') ?>">AD² partnership</a></div>
-        <div><h3>Take action</h3><a href="<?= app_url('adopt.php') ?>">Sponsor a journey</a><a href="<?= app_url('index.php#students') ?>">Student learning</a><a href="<?= app_url('index.php#partnership') ?>">Our partnership</a></div>
+        <div><h3>Take action</h3><a href="<?= app_url('adopt.php') ?>">Sponsor a journey</a><a href="<?= app_url('index.php#students') ?>">Student learning</a><a href="<?= app_url('index.php#partnership') ?>">Our partnership</a><a href="<?= app_url('academy/login.php') ?>">Student sign in</a></div>
         <div><h3>Trust & safeguarding</h3><p>Student dignity, privacy, and safety come before storytelling. Contributions are processed only through a configured secure payment provider.</p></div>
     </div>
     <div class="footer-bottom wrap"><span>© <?= date('Y') ?> Mill Creek-AR Learning Center</span><span>In conjunction with the AD2 Alumni Foundation</span></div>

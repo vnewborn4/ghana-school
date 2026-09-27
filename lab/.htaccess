@@ -1,0 +1,23 @@
+# Coding activities (Blockly Games, Snap!, Scratch/TurboWarp).
+#
+# These are third-party static apps that GENERATE AND eval() JAVASCRIPT --
+# that is how a block language runs. The site-wide CSP (script-src 'self',
+# no unsafe-eval) blocks them, so it is relaxed here and here only. The rest
+# of the site, including the sponsor portal, keeps the strict policy.
+#
+# Nothing under lab/ reads a cookie or talks to the database. Serving these
+# from a separate subdomain would be stronger still; see
+# docs/ACADEMY_INTEGRATION.md section 5.3.
+
+<IfModule mod_headers.c>
+    Header always unset Content-Security-Policy
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'self'; form-action 'none'; base-uri 'none'"
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# Never execute anything here as PHP, whatever ends up in the directory.
+Options -Indexes -ExecCGI
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8

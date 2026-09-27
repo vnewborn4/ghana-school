@@ -1,0 +1,6 @@
+# Downloaded activity bundles are not kept in git: they are large and
+# they belong to their own projects. See README.md for how to install them.
+*
+!.gitignore
+!.htaccess
+!README.md

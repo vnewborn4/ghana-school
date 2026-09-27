@@ -24,7 +24,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$siteId]);
     $site = $stmt->fetch();
 
-    if (!$site) {
+    // The kill switch acts on every page at once, so it is handled before the
+    // single-site lookup -- it carries no site_id.
+    if ($action === 'unpublish_all') {
+        if (!$isAdmin) {
+            http_response_code(403);
+            exit('Only an administrator can take every page offline.');
+        }
+        $all = db()->prepare('UPDATE student_sites SET status=? WHERE status=?');
+        $all->execute(['unpublished', 'published']);
+        audit('site.unpublish_all', [
+            'actor_user_id' => (int)$user['id'], 'subject_type' => 'student_site',
+            'detail' => 'count=' . $all->rowCount(),
+        ]);
+        $flash = 'Every student page has been taken offline.';
+        $flashKind = 'warn';
+    } elseif (!$site) {
         $flash = 'That page was not found.'; $flashKind = 'bad';
     } elseif ($action === 'publish') {
         if (!$isAdmin) {
@@ -59,15 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'actor_user_id' => (int)$user['id'], 'subject_type' => 'student_site', 'subject_id' => $siteId,
         ]);
         $flash = 'Sent back to ' . $site['display_name'] . ' with your note.';
-    } elseif ($action === 'unpublish_all' && $isAdmin) {
-        $count = db()->prepare('UPDATE student_sites SET status=? WHERE status=?');
-        $count->execute(['unpublished', 'published']);
-        audit('site.unpublish_all', [
-            'actor_user_id' => (int)$user['id'], 'subject_type' => 'student_site',
-            'detail' => 'count=' . $count->rowCount(),
-        ]);
-        $flash = 'Every student page has been taken offline.';
-        $flashKind = 'warn';
     }
 }
 

@@ -70,6 +70,8 @@ function onboard_learner(array $input, int $actorUserId): array {
 
     $cohortId = (int)($input['cohort_id'] ?? 0) ?: null;
     $ageBand  = mb_substr(trim((string)($input['age_band'] ?? '')), 0, 40);
+    $gender   = in_array($input['gender'] ?? '', ['girl','boy','other'], true)
+        ? $input['gender'] : 'not_recorded';
     $lang     = isset(supported_langs()[$input['preferred_lang'] ?? '']) ? $input['preferred_lang'] : 'en';
 
     $slug = onboarding_make_slug($displayName);
@@ -80,12 +82,12 @@ function onboard_learner(array $input, int $actorUserId): array {
     try {
         $stmt = $pdo->prepare(
             'INSERT INTO learners
-                (username, display_name, age_band, preferred_lang, pin_hash, must_change_pin,
-                 cohort_id, guardian_consent_on, consent_scope, created_by)
-             VALUES (?,?,?,?,?,1,?,?,?,?)'
+                (username, display_name, age_band, gender, preferred_lang, pin_hash,
+                 must_change_pin, cohort_id, guardian_consent_on, consent_scope, created_by)
+             VALUES (?,?,?,?,?,?,1,?,?,?,?)'
         );
         $stmt->execute([
-            $slug, $displayName, $ageBand, $lang,
+            $slug, $displayName, $ageBand, $gender, $lang,
             password_hash($pin, PASSWORD_DEFAULT),
             $cohortId, $consentOn, $scope, $actorUserId,
         ]);
@@ -138,7 +140,7 @@ function reset_learner_pin(int $learnerId, int $actorUserId): string {
 
 /**
  * Parse pasted roster rows for bulk onboarding.
- * Format: display name, age band, guardian consent date (YYYY-MM-DD), scope
+ * Format: display name, age band, guardian consent date (YYYY-MM-DD), scope, gender
  * Only the name and the consent date are required.
  */
 function parse_roster_rows(string $raw): array {
@@ -155,6 +157,7 @@ function parse_roster_rows(string $raw): array {
             'guardian_consent_on' => $parts[2] ?? '',
             'consent_scope'       => ($parts[3] ?? '') === 'learning_and_sponsor_updates'
                                      ? 'learning_and_sponsor_updates' : 'learning_only',
+            'gender'              => strtolower(trim($parts[4] ?? '')),
         ];
     }
     return $rows;

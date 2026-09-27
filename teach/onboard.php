@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'age_band'            => (string)($_POST['age_band'] ?? ''),
             'guardian_consent_on' => (string)($_POST['guardian_consent_on'] ?? ''),
             'consent_scope'       => (string)($_POST['consent_scope'] ?? 'learning_only'),
+            'gender'              => (string)($_POST['gender'] ?? 'not_recorded'),
           ]];
 
     if (!$rows) $errors[] = 'No rows were found to add.';
@@ -105,6 +106,19 @@ require __DIR__ . '/../includes/academy_header.php';
         </div>
 
         <div class="field">
+            <label for="gender">Gender (optional)</label>
+            <select id="gender" name="gender">
+                <option value="not_recorded">Prefer not to record</option>
+                <option value="girl">Girl</option>
+                <option value="boy">Boy</option>
+                <option value="other">Other</option>
+            </select>
+            <p class="field-hint">Recorded only so participation can be reported in aggregate to
+               funders, who almost always ask. It is never shown beside a learner's work. Leave it
+               unrecorded if your consent form does not cover it.</p>
+        </div>
+
+        <div class="field">
             <label for="preferred_lang">Language</label>
             <select id="preferred_lang" name="preferred_lang">
                 <?php foreach (supported_langs() as $code => $label): ?>
@@ -136,8 +150,8 @@ require __DIR__ . '/../includes/academy_header.php';
     <h2>A whole class</h2>
     <p class="field-hint">
         One student per line:
-        <code>first name, age band, consent date (YYYY-MM-DD), scope</code><br>
-        Scope is optional and defaults to learning only. A header row is ignored.
+        <code>first name, age band, consent date (YYYY-MM-DD), scope, gender</code><br>
+        Scope and gender are optional. A header row is ignored.
     </p>
     <form method="post">
         <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">

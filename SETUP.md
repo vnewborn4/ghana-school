@@ -73,3 +73,118 @@ Use a dedicated FTP account restricted to the site directory, and prefer FTPS (t
 ## Claude Code graph memory
 
 The project ships a `.mcp.json` that loads the official MCP knowledge-graph memory server (`@modelcontextprotocol/server-memory`) in Claude Code sessions. The graph is stored at `.claude/memory.jsonl` (one JSON object per line) so it lives inside the repository. Sessions can record entities, relations, and observations about the project and recall them later. Because remote Claude Code containers are ephemeral, commit `.claude/memory.jsonl` after a session adds anything worth keeping — only committed changes persist to future sessions.
+
+## Student academy
+
+The academy adds a learner side to the site: student accounts, assignments, a
+personal web page for every student, and a teacher portal. The design and the
+reasoning behind it are in `docs/ACADEMY_INTEGRATION.md`; funding and free
+resources are in `docs/FUNDING_AND_FREE_RESOURCES.md`.
+
+### 1. Run the migration
+
+```
+mysql ghana_school < migrations/2026-09-27-academy.sql
+```
+
+It is safe to run more than once. It also adds a `role` column to `users` and
+promotes anyone with the legacy `is_admin=1` flag to `role='admin'`.
+
+Run `migrations/2026-09-27-email-verification.sql` too if you have not already.
+It previously failed on a foreign-key type mismatch and never created its table;
+that is fixed, so check whether `email_verifications` exists on your database.
+
+### 2. Point storage outside the web root
+
+Learner files — student pages and assignment uploads — must not be reachable
+over HTTP. Set an absolute path above the document root:
+
+```
+SetEnv GHANA_STORAGE_PATH /home/youraccount/private/ghana-storage
+```
+
+The directory must be writable by the web server. Without this the files go in
+`storage/` inside the project, which `storage/.htaccess` denies — a fallback, not
+the preferred arrangement. Check it by requesting `/storage/student_sites/`
+in a browser: anything other than 403 or 404 means the protection is not working
+and you should stop and fix it before onboarding a child.
+
+### 3. Confirm the rewrites work
+
+`/students/<slug>/` and `/students/preview/<slug>/` are served by
+`students/serve.php` through rules in `.htaccess`. They need `AllowOverride` to
+permit `mod_rewrite` on the host. After creating your first learner, open their
+page address: a 404 where a page should be usually means the rewrites are not
+being applied.
+
+### 4. Make someone a teacher
+
+```
+UPDATE users SET role='teacher' WHERE email='teacher@example.org';
+```
+
+Roles are `sponsor` (the default), `teacher`, and `admin`. Admins can do
+everything teachers can. Administrator access is never granted automatically.
+
+### 5. Create a class, then onboard learners
+
+Sign in, open **Teacher portal**, and use **Onboard**. One submission creates the
+account, a one-time PIN, the student's web page, and the audit entry, then prints
+cut-up welcome cards. Paste a whole class roster to do thirty at once.
+
+**PINs are shown once.** They are stored only as a hash. A forgotten PIN is reset
+by a teacher from the learner's page, which is also the right identity check for
+a child.
+
+Add classes directly for now:
+
+```
+INSERT INTO cohorts (name, term) VALUES ('Tuesday Coders', 'Term 1 2026');
+```
+
+### 6. Install the coding activities
+
+`lab/` ships empty. See `lab/README.md` — Blockly Games is the place to start, at
+about 4 MB and fully offline. Modules that need a tool are seeded unpublished so
+a learner never meets a broken link; publish them once the tool is in place.
+
+### 7. Language
+
+`lang/en.php` is complete. `lang/tw.php` holds a starter set of Twi, and every
+key missing from it falls back to English automatically.
+
+**Before showing Twi to families, have a Twi speaker on the Accra staff read and
+extend that file.** Translate the guardian consent form first — consent given in
+a language a guardian does not read is not informed consent.
+
+To add Ga or Ewe, copy `lang/en.php` to `lang/gaa.php` or `lang/ee.php`, translate
+what you can, and uncomment the language in `supported_langs()` in
+`includes/i18n.php`.
+
+### Before a child uses any of this
+
+- Signed guardian consent, in a language the guardian reads, covering the account,
+  the data held, and the public web page. The onboarding form requires the date
+  from that form, and `consent_scope` is enforced in the database: work from a
+  learner marked "learning only" can never become a sponsor update, whatever a
+  teacher ticks.
+- Registration as a data controller with Ghana's Data Protection Commission.
+- A children's-data section in `privacy.php`. The current policy covers sponsors
+  only.
+- A written safeguarding policy agreed with the centre's leadership and the
+  AD2 Alumni Foundation, naming who may view learner work and who takes a page
+  down out of hours.
+
+### Smoke test
+
+`tests/smoke.sh` walks the whole academy flow and asserts the properties that
+protect children: role separation, the publication gate, path traversal, CSRF,
+draft privacy, and the take-everything-offline switch.
+
+```
+BASE_URL=http://localhost/ghana-school tests/smoke.sh
+```
+
+Run it against a development database only — it creates learners and publishes
+pages. It expects the migrations applied plus two seeded accounts,
+`admin@example.org` and `teacher@example.org`; the header comment lists them.

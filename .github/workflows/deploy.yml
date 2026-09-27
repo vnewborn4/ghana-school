@@ -41,3 +41,7 @@ jobs:
             SETUP.md
             database.sql
             migrations/**
+            docs/**
+            tests/**
+            storage/student_sites/**
+            storage/submissions/**

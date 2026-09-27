@@ -7,7 +7,49 @@ Covers: onboarding automation, per-student web directories, student / teacher / 
 portals, open-source coding tools, dual-language (English + Ghanaian language) support,
 and cultural and legal fit for a program in Accra.
 
-Status: **proposal for review.** Nothing here is built yet.
+Status: **phases 1–4 are built and running**; see "What is built" below.
+Phases 5–7 remain proposals.
+
+---
+
+## What is built
+
+| Area | State |
+| --- | --- |
+| Learner accounts, separate from `users`, username + staff-issued PIN | Built — `includes/learner_auth.php`, `migrations/2026-09-27-academy.sql` |
+| Separate session, idle timeout, PIN attempt limiting, forced first-time PIN change | Built |
+| Automated onboarding, single and bulk, with printable welcome cards | Built — `teach/onboard.php`, `teach/cards.php`, `includes/onboarding.php` |
+| Student web spaces at `/students/<slug>/`, draft and live, quotas, EXIF stripping | Built — `includes/student_sites.php`, `students/serve.php`, `academy/mysite.php` |
+| Publish workflow: unpublished by default, admin approves, any staff can take down, global kill switch | Built — `teach/pages.php` |
+| Student portal, teacher portal, role checks | Built — `academy/`, `teach/`, `require_role()` |
+| Assignments, submissions, marking, feedback, badges | Built — `academy/assignment.php`, `teach/marking.php` |
+| Consent scope enforced in the query, not the form | Built — `teach/marking.php` |
+| Append-only audit log with hashed IPs | Built — `includes/audit.php` |
+| Dual-language machinery, English complete, Twi started | Built — `includes/i18n.php`, `lang/` |
+| Aggregate programme report for funders | Built — `teach/report.php` |
+| Coding activities under `lab/`, with a CSP scoped to that directory | Scaffolded — `lab/README.md` explains the install; the directory ships empty |
+| Sponsor bridge: shareable work becoming a draft sponsor update | **Not built.** `submissions.shareable` is set and enforced; the generation of draft `student_updates` from it is still to do |
+| Kolibri at the centre, offline service worker | **Not built** — no web development needed for Kolibri; see phase 5 |
+| Moodle or Chamilo on a subdomain | **Not built**, and only if the programme outgrows the above |
+
+Setup instructions are in `SETUP.md`. Funding and free resources are in
+`docs/FUNDING_AND_FREE_RESOURCES.md`.
+
+### Deviations from this design, and why
+
+- **The editor uses plain textareas, not CodeMirror** (§6). A CodeMirror bundle
+  is around 300 KB before any language mode, against roughly zero for a textarea
+  with a monospace font and tab handling. On metered Accra mobile data, for
+  children writing their first twenty lines of HTML, the textarea is the better
+  trade. Revisit when there is a local mirror or the learners outgrow it.
+- **Student pages are served from the same hostname** with
+  `Content-Security-Policy: sandbox` giving them an opaque origin (§5.3), because
+  a subdomain has not been confirmed on the hosting plan. Get the subdomain when
+  you can; it is strictly stronger.
+- **An optional coarse `gender` column was added** to `learners`, against the
+  data-minimisation rule in §5. Gender-disaggregated participation is a
+  near-universal funder requirement, it is optional, it is never displayed beside
+  a learner's work, and it is only read in aggregate.
 
 ---
 

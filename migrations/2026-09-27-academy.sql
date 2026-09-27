@@ -57,6 +57,16 @@ CREATE TABLE IF NOT EXISTS learners (
     INDEX idx_learner_cohort (cohort_id, active)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Optional, coarse gender, recorded only because gender-disaggregated
+-- participation is a near-universal requirement of youth education funders
+-- (Mastercard Foundation's Young Africa Works targets 70% young women).
+-- It is optional, it is never shown next to a learner's work, and it is only
+-- ever read in aggregate by teach/report.php. Leave it unrecorded if the
+-- guardian consent form does not cover it.
+ALTER TABLE learners
+  ADD COLUMN IF NOT EXISTS gender ENUM('not_recorded','girl','boy','other')
+  NOT NULL DEFAULT 'not_recorded';
+
 -- ---------------------------------------------------------------------------
 -- Curriculum
 -- ---------------------------------------------------------------------------

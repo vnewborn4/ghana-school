@@ -21,10 +21,10 @@ jobs:
       - name: Sync files to server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          # Use Ghana account credentials by default; override for other deployments
-          username: ${{ secrets.FTP_USERNAME_GHANA || secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD_GHANA || secrets.FTP_PASSWORD }}
+          server: ftps15.us.cloudlogin.co
+          # Use Ghana account credentials: ftp_millcreek-ar-learning.com
+          username: ftp_millcreek-ar-learning.com
+          password: ${{ secrets.FTP_PASSWORD_GHANA }}
           # Use "ftps" (encrypted) whenever the host supports it; change to
           # "ftp" only if the server cannot do FTPS.
           protocol: ftps

@@ -8,6 +8,11 @@
  *   $navItems    [['href'=>..., 'label'=>..., 'key'=>...], ...]
  *   $portalName  heading shown beside the brand
  *   $signOut     ['action'=>url, 'csrf'=>token]  (optional)
+ *   $csrfToken   the session's CSRF token, for the offline queue to reuse
+ *   $offlineFor  the signed-in learner's username, on student pages only.
+ *                Everything the browser stores offline is tagged with it, so
+ *                queued work can never be sent under another child's name.
+ *   $siteSlug    the learner's page slug, when there is an editor on the page
  */
 require_once __DIR__ . '/paths.php';
 require_once __DIR__ . '/security.php';
@@ -18,7 +23,18 @@ $portalKind = $portalKind ?? 'student';
 $pageTitle  = $pageTitle  ?? 'Academy';
 $portalName = $portalName ?? 'Academy';
 $navItems   = $navItems   ?? [];
+$offlineFor = $offlineFor ?? '';
+$siteSlug   = $siteSlug   ?? '';
+$csrfToken  = $csrfToken  ?? ($signOut['csrf'] ?? '');
 $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
+
+// These pages are personal to one person and these machines are shared, so
+// they must not sit in the browser's cache for whoever opens it next. The
+// service worker never stores page HTML either; only the shell.
+if (!headers_sent()) {
+    header('Cache-Control: no-store, must-revalidate');
+    header('Pragma: no-cache');
+}
 ?>
 <!doctype html>
 <html lang="<?= htmlspecialchars(current_lang()) ?>">
@@ -26,12 +42,23 @@ $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#133d34">
+    <?php if ($csrfToken !== ''): ?>
+    <meta name="csrf-token" content="<?= htmlspecialchars($csrfToken) ?>">
+    <?php endif; ?>
     <title><?= htmlspecialchars($pageTitle) ?> | Mill Creek-AR Academy</title>
     <link rel="icon" type="image/svg+xml" href="<?= app_url('assets/images/brand-mark.svg') ?>">
+    <?php if ($portalKind === 'student'): ?>
+    <link rel="manifest" href="<?= app_url('academy/manifest.webmanifest') ?>">
+    <link rel="apple-touch-icon" href="<?= app_url('assets/images/academy-icon-192.png') ?>">
+    <?php endif; ?>
     <link rel="stylesheet" href="<?= app_url('assets/css/style.css') ?>">
     <link rel="stylesheet" href="<?= app_url('assets/css/academy.css') ?>">
 </head>
-<body class="academy academy-<?= htmlspecialchars($portalKind) ?>">
+<body class="academy academy-<?= htmlspecialchars($portalKind) ?>"
+      data-base-path="<?= htmlspecialchars(BASE_PATH) ?>"
+      <?php if ($offlineFor !== ''): ?>data-learner="<?= htmlspecialchars($offlineFor) ?>"<?php endif; ?>
+      <?php if ($siteSlug !== ''): ?>data-site-slug="<?= htmlspecialchars($siteSlug) ?>"<?php endif; ?>>
 <a class="skip-link" href="#academy-main">Skip to main content</a>
 
 <header class="academy-bar">

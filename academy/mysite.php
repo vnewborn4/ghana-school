@@ -90,6 +90,8 @@ $portalKind = 'student';
 $portalName = t('app.academy');
 $pageTitle  = t('site.title');
 $navItems   = student_nav();
+$offlineFor = $learner['username'];
+$siteSlug   = $slug;
 $signOut    = ['action' => app_url('academy/logout.php'), 'csrf' => learner_csrf_token()];
 require __DIR__ . '/../includes/academy_header.php';
 ?>
@@ -120,7 +122,7 @@ require __DIR__ . '/../includes/academy_header.php';
     <div class="quota-bar"><span style="width: <?= $pct ?>%"></span></div>
 </div>
 
-<form method="post" id="site-editor-form">
+<form method="post" id="site-editor-form" data-offline-form="site" data-offline-label="Your page">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars(learner_csrf_token()) ?>">
     <input type="hidden" name="action" value="save">
 

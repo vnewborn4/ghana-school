@@ -10,6 +10,10 @@ and cultural and legal fit for a program in Accra.
 Status: **phases 1–6 are built and running**; see "What is built" below.
 Phase 7 remains a proposal.
 
+Together these mean the academy now works at three levels of connectivity:
+online as normal, offline on a learner's own device (service worker), and
+offline for the whole room on the centre's Kolibri server.
+
 ---
 
 ## What is built
@@ -32,7 +36,7 @@ Phase 7 remains a proposal.
 | Learner ↔ journey link, administrators only | Built — `teach/learner.php` |
 | Aggregate, non-identifying programme figures on the public impact page | Built — `impact.php` |
 | Kolibri at the centre: install kit, hardened provisioning, roster export, activity sync | Built — `tools/kolibri/`, `includes/centre_activity.php`, `api/kolibri_sync.php`, `teach/centre.php`, `docs/KOLIBRI_CENTRE_SETUP.md` |
-| Offline service worker for `/academy/` | **Not built** — the remaining part of phase 5 |
+| Offline service worker for `/academy/`, with a work queue and an installable manifest | Built — `academy/sw.js`, `academy/offline.html`, `academy/manifest.webmanifest`, `assets/js/academy-offline.js` |
 | Moodle or Chamilo on a subdomain | **Not built**, and only if the programme outgrows the above |
 
 Setup instructions are in `SETUP.md`. Funding and free resources are in
@@ -53,6 +57,12 @@ Setup instructions are in `SETUP.md`. Funding and free resources are in
   data-minimisation rule in §5. Gender-disaggregated participation is a
   near-universal funder requirement, it is optional, it is never displayed beside
   a learner's work, and it is only read in aggregate.
+- **The service worker never caches page HTML**, only the shell. Caching a
+  learner's dashboard would be the fastest route to showing one child's work
+  to the next child on a shared lab machine, so a failed navigation gets a
+  static offline page instead. Unsent work is queued by the page rather than
+  the worker, because replaying a POST has to know which learner is signed in
+  and a worker is shared by whoever uses the device next.
 - **A generated draft never contains the learner's own words** (§10). Children
   write freely — a surname, a school, a street — so drafts are composed from
   structured facts about the lesson alone. What the learner wrote is shown to the

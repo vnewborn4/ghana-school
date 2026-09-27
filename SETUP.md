@@ -281,3 +281,71 @@ Only counts travel — a date, a Kolibri username, sessions, completions,
 minutes. No content titles, no real names, nothing a child typed. The figures
 appear on the learner's page, in the programme report, and in the aggregate
 totals on the public page.
+
+## Offline access to the academy
+
+The academy keeps working when the line goes down: the page still opens, the
+interface is already on the device, and a learner's work is never lost to a
+dropped connection. Nothing needs installing — it is a service worker at
+`academy/sw.js` plus `assets/js/academy-offline.js`, and it turns itself on
+the first time a learner visits.
+
+**It only covers `/academy/`.** A service worker's scope is its own directory,
+so this one never touches the sponsor portal, the teacher portal or a
+student's published page.
+
+### What is kept on the device, and what is not
+
+| | |
+| --- | --- |
+| **The shell** — stylesheets, scripts, icons, the offline page | Cached. The same bytes for everyone, safe on a shared lab machine. |
+| **Page HTML** | Never cached. Academy pages are personal and these machines are shared, so a failed navigation shows the offline page rather than the last child's dashboard. |
+| **Unsent work** | Queued in the browser, tagged with the learner who made it. |
+| **Unsaved typing in the page editor** | Kept locally and offered back on the next visit. Only the page's own code, which is written to be published — not reflections or answers. |
+
+Both the queue and the local draft expire after seven days.
+
+### What a learner sees
+
+Offline, a banner says their work is being kept on the computer. When the
+connection returns it sends by itself and the banner confirms it. Nothing is
+ever dropped silently: if a save cannot be sent because the session expired,
+it stays in the queue and the learner is told to sign in again on that
+computer.
+
+**Work is only ever sent for the learner who made it.** If a child queues
+work and someone else signs in on the same machine, the queued work sits
+untouched and the page explains why. One child's homework can never be
+submitted under another child's name.
+
+### Installing it to a phone
+
+`academy/manifest.webmanifest` makes the academy installable to a home screen,
+which is worth suggesting to learners who have a phone: it opens full screen
+and the shell is already there, so it starts even with no data.
+
+### When you change the interface
+
+Bump `CACHE_VERSION` in `academy/sw.js`. Old caches are deleted on activate,
+so a learner picks up the new shell on their next visit. Without the bump,
+stale CSS or JavaScript can sit on a device for a day.
+
+### Testing it
+
+```
+php -S localhost:8099 -t .          # localhost, not 127.0.0.1 — see below
+ALLOW_DB_RESET=yes tests/run-offline-tests.sh
+```
+
+It drives a real Chromium through a real dropped connection: registration,
+scope, what is and is not cached, queueing offline, draining when the line
+returns, the file-upload round trip, the cross-learner guard, and the
+manifest.
+
+Use **localhost**, not an IP address. Browsers only treat localhost as a
+secure context, and without one there are no service workers to test. In
+production this is not a concern: the site already forces HTTPS.
+
+Playwright is a development dependency and is not in the repository:
+`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install playwright`, then set
+`PLAYWRIGHT_PATH` if it is not on the default module path.

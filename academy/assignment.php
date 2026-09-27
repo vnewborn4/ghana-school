@@ -87,6 +87,7 @@ $portalKind = 'student';
 $portalName = t('app.academy');
 $pageTitle  = $assignment['title'];
 $navItems   = student_nav();
+$offlineFor = $learner['username'];
 $signOut    = ['action' => app_url('academy/logout.php'), 'csrf' => learner_csrf_token()];
 require __DIR__ . '/../includes/academy_header.php';
 ?>
@@ -132,7 +133,8 @@ require __DIR__ . '/../includes/academy_header.php';
     <h2><?= e('asg.your_work') ?></h2>
     <?php if ($isSite): ?><p class="field-hint"><?= e('asg.site_hint') ?></p><?php endif; ?>
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data"
+          data-offline-form="assignment" data-offline-label="Your answer">
         <input type="hidden" name="csrf" value="<?= htmlspecialchars(learner_csrf_token()) ?>">
 
         <?php if ($wantsText): ?>

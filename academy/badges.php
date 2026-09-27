@@ -16,6 +16,7 @@ $portalKind = 'student';
 $portalName = t('app.academy');
 $pageTitle  = t('badge.title');
 $navItems   = student_nav();
+$offlineFor = $learner['username'];
 $signOut    = ['action' => app_url('academy/logout.php'), 'csrf' => learner_csrf_token()];
 require __DIR__ . '/../includes/academy_header.php';
 ?>

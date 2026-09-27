@@ -25,9 +25,9 @@ jobs:
           # Use Ghana account credentials: ftp_millcreek-ar-learning.com
           username: ftp_millcreek-ar-learning.com
           password: ${{ secrets.FTP_PASSWORD_GHANA }}
-          # Use "ftps" (encrypted) whenever the host supports it; change to
-          # "ftp" only if the server cannot do FTPS.
+          # Use explicit FTPS on standard port 21 with STARTTLS
           protocol: ftps
+          port: 21
           # Remote directory to deploy into. For Ghana, uses /www/millcreek-ar-learning.com/
           # For global account, override via FTP_SERVER_DIR variable. Path must end with a slash.
           server-dir: ${{ vars.FTP_SERVER_DIR || '/www/millcreek-ar-learning.com/' }}

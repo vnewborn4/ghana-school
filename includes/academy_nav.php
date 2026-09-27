@@ -19,7 +19,8 @@ function staff_nav(bool $isAdmin): array {
         ['href' => app_url('teach/report.php'),  'label' => 'Report',       'key' => 'report.php'],
     ];
     if ($isAdmin) {
-        $items[] = ['href' => app_url('admin.php'), 'label' => 'Sponsor admin', 'key' => 'admin.php'];
+        $items[] = ['href' => app_url('teach/updates.php'), 'label' => 'Sponsor updates', 'key' => 'updates.php'];
+        $items[] = ['href' => app_url('admin.php'),         'label' => 'Sponsor admin',   'key' => 'admin.php'];
     }
     return $items;
 }

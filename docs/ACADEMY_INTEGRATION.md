@@ -7,8 +7,8 @@ Covers: onboarding automation, per-student web directories, student / teacher / 
 portals, open-source coding tools, dual-language (English + Ghanaian language) support,
 and cultural and legal fit for a program in Accra.
 
-Status: **phases 1–4 are built and running**; see "What is built" below.
-Phases 5–7 remain proposals.
+Status: **phases 1–4 and 6 are built and running**; see "What is built" below.
+Phases 5 and 7 remain proposals.
 
 ---
 
@@ -28,7 +28,9 @@ Phases 5–7 remain proposals.
 | Dual-language machinery, English complete, Twi started | Built — `includes/i18n.php`, `lang/` |
 | Aggregate programme report for funders | Built — `teach/report.php` |
 | Coding activities under `lab/`, with a CSP scoped to that directory | Scaffolded — `lab/README.md` explains the install; the directory ships empty |
-| Sponsor bridge: shareable work becoming a draft sponsor update | **Not built.** `submissions.shareable` is set and enforced; the generation of draft `student_updates` from it is still to do |
+| Sponsor bridge: shareable work becoming a draft sponsor update | Built — `includes/sponsor_bridge.php`, `teach/updates.php`, `migrations/2026-09-28-sponsor-bridge.sql` |
+| Learner ↔ journey link, administrators only | Built — `teach/learner.php` |
+| Aggregate, non-identifying programme figures on the public impact page | Built — `impact.php` |
 | Kolibri at the centre, offline service worker | **Not built** — no web development needed for Kolibri; see phase 5 |
 | Moodle or Chamilo on a subdomain | **Not built**, and only if the programme outgrows the above |
 
@@ -50,6 +52,11 @@ Setup instructions are in `SETUP.md`. Funding and free resources are in
   data-minimisation rule in §5. Gender-disaggregated participation is a
   near-universal funder requirement, it is optional, it is never displayed beside
   a learner's work, and it is only read in aggregate.
+- **A generated draft never contains the learner's own words** (§10). Children
+  write freely — a surname, a school, a street — so drafts are composed from
+  structured facts about the lesson alone. What the learner wrote is shown to the
+  administrator beside the draft, marked as context and not published, to draw on
+  in their own words.
 
 ---
 
@@ -708,11 +715,35 @@ it on the server.
 
 ```
 learner completes assignment
-   -> teacher marks reviewed, ticks "shareable"   (blocked if consent_scope forbids it)
-   -> draft student_update generated, pre-filled, PENDING
-   -> admin edits + approves in admin.php          (existing review gate)
-   -> appears on the sponsor dashboard as a journey milestone
+   -> teacher marks it reviewed and ticks "shareable"
+        consent checked in the query, not the form: a learner marked
+        learning_only cannot be shared however the form posts
+   -> draft student_update generated  (status='draft', visible=0)
+        composed from lesson facts only, never the learner's own text
+   -> administrator rewrites and approves in teach/updates.php
+        consent checked AGAIN here, in case a guardian withdrew it
+   -> status='approved', visible=1: the sponsor dashboard shows it
 ```
+
+Publishing a learner's web page for the first time drafts a milestone the same
+way. Both sources are deduplicated, so a piece of work can only ever produce one
+update, and a discarded draft is not regenerated.
+
+Three things must all hold before anything can be drafted:
+
+1. **Guardian consent** is `learning_and_sponsor_updates`.
+2. **The learner is linked to a student journey.** That link is the sensitive
+   join between a real child and a pseudonymous public profile, so only an
+   administrator may set it, and one journey belongs to one learner.
+3. **A teacher proposed the work.** Nothing is drafted automatically from
+   ordinary marking.
+
+Work that a teacher proposed but which fails 1 or 2 appears in a "held back"
+list on the approval page, saying which of the two is missing, so it is visible
+rather than silently dropped.
+
+An administrator can also take an approved update back down at any time; it is
+marked withdrawn and disappears from the sponsor dashboard, with the record kept.
 
 Sponsors currently read hand-written updates. This makes real classroom progress their
 source while keeping every existing control: first names only, no surnames, no faces

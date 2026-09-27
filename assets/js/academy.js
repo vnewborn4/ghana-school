@@ -68,4 +68,11 @@
       if (!window.confirm(node.getAttribute('data-confirm'))) { event.preventDefault(); }
     });
   });
+
+  /* ---- confirm on one button of a form that has several ---- */
+  document.querySelectorAll('[data-confirm-button]').forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      if (!window.confirm(button.getAttribute('data-confirm-button'))) { event.preventDefault(); }
+    });
+  });
 })();

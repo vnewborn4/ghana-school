@@ -1,6 +1,25 @@
-<?php $pageTitle='Opportunity Through Technology'; $pageDescription='A dignity-centered look at the barriers young people face and the pathways technology education can open in Ghana.'; include 'includes/header.php'; ?>
+<?php
+$pageTitle='Opportunity Through Technology';
+$pageDescription='A dignity-centered look at the barriers young people face and the pathways technology education can open in Ghana.';
+require_once 'includes/db.php';
+require_once 'includes/sponsor_bridge.php';
+// Aggregate counts only: no learner is identified, and nothing appears until
+// there is something real to report.
+try { $figures = bridge_public_figures(); } catch (Throwable $e) { $figures = ['learners'=>0,'completed'=>0,'pages'=>0]; }
+$hasFigures = array_sum($figures) > 0;
+include 'includes/header.php';
+?>
 <section class="page-hero"><div class="wrap"><span class="eyebrow">Why technology, why now</span><h1>Skills that can travel across industries and borders.</h1><p class="lede">Technology education does not guarantee a particular outcome. It does expand the set of problems a young person can solve, the ideas they can create, and the opportunities they can pursue.</p></div></section>
 <section class="section"><div class="wrap grid-2"><div><span class="eyebrow">The challenge</span><h2>Talent can be abundant while access remains uneven.</h2><p>Young people in Ghana navigate a changing economy where digital fluency increasingly matters. Yet access to dependable devices, connectivity, current instruction, and professional networks can vary widely.</p><p>Those barriers do not reflect a lack of ambition or ability. They reflect a gap in opportunity. A dignity-centered response starts by listening, investing in local instruction, and building consistent places to learn and practice.</p></div><div class="challenge-list"><div class="challenge-item"><strong>Reliable access</strong><p>Shared or unavailable devices can limit the repeated practice real learning requires.</p></div><div class="challenge-item"><strong>From use to creation</strong><p>Knowing how to consume digital content is different from learning to build, analyze, design, and solve.</p></div><div class="challenge-item"><strong>Pathways and networks</strong><p>Mentors, project experience, and exposure to possible careers help turn skills into informed next steps.</p></div></div></div></section>
+<?php if ($hasFigures): ?>
+<section class="section cream"><div class="wrap"><div class="statement"><span class="eyebrow">Where the programme stands today</span><h2>What our learners have built so far.</h2><p class="lede" style="margin-inline:auto">These are counts from the learning centre's own records, updated automatically. They describe the work, never the children: no names, no photographs, no identifying details.</p></div>
+<div class="grid-3" style="margin-top:45px">
+    <article class="impact-card"><span class="number"><?= number_format($figures['learners']) ?></span><h3>Learners enrolled</h3><p>Young people with an account at the learning centre right now.</p></article>
+    <article class="impact-card"><span class="number"><?= number_format($figures['completed']) ?></span><h3>Projects completed</h3><p>Pieces of work finished by a learner and reviewed by a teacher.</p></article>
+    <article class="impact-card"><span class="number"><?= number_format($figures['pages']) ?></span><h3>Web pages published</h3><p>Pages built by a learner and checked by staff before going online.</p></article>
+</div></div></section>
+<?php endif; ?>
+
 <section class="section forest"><div class="wrap"><span class="eyebrow light">Pathways, not promises</span><h2>What a sustained learning journey can build.</h2><div class="pathway" style="margin-top:42px"><div><strong>1. Access</strong><p>Time with tools and a stable learning environment.</p></div><div><strong>2. Practice</strong><p>Repeated work that turns unfamiliar tasks into usable skills.</p></div><div><strong>3. Projects</strong><p>Visible evidence of problem-solving, creativity, and growth.</p></div><div><strong>4. Possibility</strong><p>A stronger foundation for further education, work, or entrepreneurship.</p></div></div></div></section>
 <section class="section cream"><div class="wrap"><div class="statement"><span class="eyebrow">Family and community trajectory</span><h2>The value of opportunity can move outward.</h2><p class="lede" style="margin-inline:auto">When a young person gains confidence and useful skills, the benefits can extend beyond the individual: knowledge can be shared, younger learners can see a model, and new income pathways may strengthen a household. We speak of that possibility with hope—not guarantees—and measure progress honestly.</p></div><div class="grid-3" style="margin-top:45px"><article class="opportunity-card"><h3>Education</h3><p>A stronger base for advanced study, certifications, and independent learning.</p></article><article class="opportunity-card"><h3>Employment</h3><p>Preparation for digital tasks used across local and global workplaces.</p></article><article class="opportunity-card"><h3>Entrepreneurship</h3><p>Tools to communicate, design, manage, and test ideas that serve real needs.</p></article></div></div></section>
 <?php include 'includes/footer.php'; ?>

@@ -2,6 +2,16 @@
 /**
  * Dual-language support: English plus Ghanaian languages.
  *
+ * English is the primary language of the whole site. Ghanaian languages exist
+ * to help a learner understand an instruction they have half-grasped in
+ * English, not to replace it -- English is the language of instruction from
+ * Primary 4, of every programming reference they will meet, and of the work
+ * they are being prepared for.
+ *
+ * The donor-facing side of the site is English only. Sponsors read English,
+ * so the sponsor portal, sponsor updates and the public pages are not
+ * translated and should not be. This helper is for the learner side.
+ *
  * Translations live in lang/<code>.php as flat key => string arrays. Any key
  * missing from a translation falls back to English, so a partly translated
  * language is always safe to ship.

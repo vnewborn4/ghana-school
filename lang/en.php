@@ -3,9 +3,15 @@
  * English strings for the student academy. This file is the reference:
  * every key must exist here, because other languages fall back to it.
  *
- * Scope note: the student portal is translated. The teacher and admin
- * portals stay in English, which is the working language of staff and of
- * all the programming documentation learners will meet later.
+ * Scope note: only the student portal is translated. English is the primary
+ * language throughout; a Ghanaian language is there to clarify an instruction
+ * for a learner, not to replace English.
+ *
+ * Not translated, deliberately:
+ *   - the sponsor portal and sponsor updates -- donors read English
+ *   - the public marketing pages
+ *   - the teacher and admin portals -- staff work in English
+ *   - programming keywords, HTML tags and CSS properties, anywhere
  */
 return [
     // Common

@@ -10,10 +10,12 @@ $learnerId = (int)($_GET['id'] ?? 0);
 
 $load = function (int $id) {
     $stmt = db()->prepare(
-        'SELECT l.*, c.name AS cohort_name, ss.slug AS site_slug, ss.status AS site_status
+        'SELECT l.*, c.name AS cohort_name, ss.slug AS site_slug, ss.status AS site_status,
+                j.first_name AS journey_name, j.public_code AS journey_code
          FROM learners l
          LEFT JOIN cohorts c ON c.id=l.cohort_id
          LEFT JOIN student_sites ss ON ss.learner_id=l.id
+         LEFT JOIN student_journeys j ON j.id=l.student_journey_id
          WHERE l.id=?'
     );
     $stmt->execute([$id]);
@@ -61,6 +63,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $flash = 'Consent record updated.';
             break;
 
+        case 'set_journey':
+            // The link between a real child and their pseudonymous public
+            // profile is the most sensitive relationship in the system, so
+            // only an administrator may set or clear it.
+            if (!is_admin_user($user)) { http_response_code(403); exit('Only an administrator can link a learner to a sponsor journey.'); }
+            $journeyId = (int)($_POST['student_journey_id'] ?? 0) ?: null;
+            if ($journeyId !== null) {
+                $taken = db()->prepare('SELECT display_name FROM learners WHERE student_journey_id=? AND id<>?');
+                $taken->execute([$journeyId, $learnerId]);
+                $other = $taken->fetchColumn();
+                if ($other !== false) {
+                    $flash = 'That journey is already linked to ' . $other . '. Unlink it there first.';
+                    $flashKind = 'bad';
+                    break;
+                }
+            }
+            db()->prepare('UPDATE learners SET student_journey_id=? WHERE id=?')->execute([$journeyId, $learnerId]);
+            audit('learner.journey_link', [
+                'actor_user_id' => (int)$user['id'], 'subject_type' => 'learner',
+                'subject_id' => $learnerId, 'detail' => 'journey=' . ($journeyId ?? 'none'),
+            ]);
+            $flash = $journeyId ? 'Linked to a sponsor journey.' : 'Unlinked from the sponsor journey.';
+            break;
+
         case 'erase':
             if (!is_admin_user($user)) { http_response_code(403); exit('Only an administrator can erase a learner record.'); }
             $slug = $learner['username'];
@@ -101,7 +127,10 @@ require __DIR__ . '/../includes/academy_header.php';
     <h1><?= htmlspecialchars($learner['display_name']) ?></h1>
     <p><code><?= htmlspecialchars($learner['username']) ?></code>
        &middot; <?= htmlspecialchars($learner['cohort_name'] ?? 'no class') ?>
-       &middot; <?= htmlspecialchars($learner['age_band'] ?: 'no age band') ?></p>
+       &middot; <?= htmlspecialchars($learner['age_band'] ?: 'no age band') ?>
+       &middot; <?= $learner['journey_name']
+            ? 'journey: ' . htmlspecialchars($learner['journey_name'])
+            : 'no sponsor journey' ?></p>
 </div>
 
 <?php if ($flash): ?><div class="notice notice-<?= htmlspecialchars($flashKind) ?>"><?= htmlspecialchars($flash) ?></div><?php endif; ?>
@@ -176,6 +205,44 @@ require __DIR__ . '/../includes/academy_header.php';
         <button class="button-big secondary" type="submit">Save consent record</button>
     </form>
 </div>
+
+<?php if (is_admin_user($user)): ?>
+<div class="academy-card">
+    <h2>Sponsor journey</h2>
+    <p class="field-hint">Links this learner to the pseudonymous public profile a sponsor
+       follows. Without it their work can never become a sponsor update, however the
+       consent record reads. One journey, one learner.</p>
+    <?php
+    $journeys = db()->query(
+        'SELECT j.id, j.first_name, j.public_code,
+                (SELECT COUNT(*) FROM learners l2 WHERE l2.student_journey_id=j.id) AS linked
+         FROM student_journeys j WHERE j.active=1 ORDER BY j.first_name'
+    )->fetchAll();
+    ?>
+    <form method="post">
+        <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+        <input type="hidden" name="action" value="set_journey">
+        <div class="field">
+            <label for="student_journey_id">Journey</label>
+            <select id="student_journey_id" name="student_journey_id">
+                <option value="0">Not linked</option>
+                <?php foreach ($journeys as $journey): ?>
+                    <?php $isMine = (int)$journey['id'] === (int)$learner['student_journey_id']; ?>
+                    <option value="<?= (int)$journey['id'] ?>" <?= $isMine ? 'selected' : '' ?>
+                            <?= (!$isMine && (int)$journey['linked'] > 0) ? 'disabled' : '' ?>>
+                        <?= htmlspecialchars($journey['first_name'] . ' (' . $journey['public_code'] . ')') ?><?= (!$isMine && (int)$journey['linked'] > 0) ? ' — already linked' : '' ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <button class="button-big secondary" type="submit">Save journey link</button>
+    </form>
+    <?php if ($learner['consent_scope'] !== 'learning_and_sponsor_updates'): ?>
+        <p class="field-hint" style="margin-top:12px"><strong>Note:</strong> this learner's guardian
+           agreed to learning only, so no sponsor update can be created even once a journey is linked.</p>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
 
 <div class="academy-card">
     <h2>Work</h2>

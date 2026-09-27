@@ -9,6 +9,7 @@
 require_once __DIR__ . '/../includes/paths.php';
 require_once __DIR__ . '/../includes/roles.php';
 require_once __DIR__ . '/../includes/student_sites.php';
+require_once __DIR__ . '/../includes/sponsor_bridge.php';
 require_once __DIR__ . '/../includes/academy_nav.php';
 
 $user = require_role('teacher');
@@ -54,6 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'subject_id' => $siteId, 'detail' => 'slug=' . $site['slug'],
             ]);
             $flash = $site['display_name'] . "'s page is now online.";
+
+            // The first publication of a page is a milestone worth telling a
+            // sponsor about. Consent and the journey link are checked inside.
+            $why = null;
+            if (bridge_generate_from_site($siteId, (int)$user['id'], $why) !== null) {
+                $flash .= ' A draft sponsor update is waiting for approval.';
+            }
         } else {
             $flash = 'That page could not be published. Check the storage directory is writable.';
             $flashKind = 'bad';

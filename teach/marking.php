@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/paths.php';
 require_once __DIR__ . '/../includes/roles.php';
 require_once __DIR__ . '/../includes/student_sites.php';
+require_once __DIR__ . '/../includes/sponsor_bridge.php';
 require_once __DIR__ . '/../includes/academy_nav.php';
 
 $user = require_role('teacher');
@@ -51,6 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ((int)$count->fetchColumn() >= 5) award_badge($learnerId, 'five-lessons');
         }
         $flash = 'Marked.';
+
+        // Proposing work for sponsors drafts an update for an administrator
+        // to rewrite and approve. Nothing reaches a sponsor from here.
+        if ($decision === 'reviewed' && $shareable === 1) {
+            $why = null;
+            if (bridge_generate_from_submission($submissionId, (int)$user['id'], $why) !== null) {
+                $flash = 'Marked, and a draft sponsor update is waiting for an administrator.';
+            } elseif ($why !== null) {
+                $flash = 'Marked. No sponsor update was drafted: ' . $why;
+            }
+        }
     }
     $submissionId = 0;   // fall back to the queue after marking
 }

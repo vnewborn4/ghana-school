@@ -1,5 +1,6 @@
 <?php
-require_once 'includes/auth.php'; require_once 'includes/db.php'; $adminId=require_admin();
+require_once 'includes/auth.php'; require_once 'includes/db.php'; require_once 'includes/sponsor_bridge.php'; $adminId=require_admin();
+$pendingUpdates=bridge_pending_count();
 $errors=[]; $success='';
 function clean_field(string $name,int $max): string { $value=trim((string)($_POST[$name] ?? '')); return mb_substr($value,0,$max); }
 if($_SERVER['REQUEST_METHOD']==='POST'){
@@ -29,7 +30,7 @@ $students=db()->query('SELECT j.*,(SELECT COUNT(*) FROM sponsorships s WHERE s.s
 $sponsorships=db()->query('SELECT s.*,u.first_name donor_first,u.last_name donor_last,u.email,j.first_name student_first FROM sponsorships s JOIN users u ON u.id=s.user_id JOIN student_journeys j ON j.id=s.student_journey_id ORDER BY s.created_at DESC LIMIT 100')->fetchAll();
 $pageTitle='Student Administration'; $pageDescription='Protected tools for managing sponsorship profiles and student updates.'; include 'includes/header.php';
 ?>
-<section class="dashboard-hero"><div class="wrap dashboard-head"><div><span class="eyebrow light">Protected administration</span><h1>Student profiles and updates.</h1><p>Create privacy-safe sponsorship profiles and publish reviewed learning updates.</p></div><div class="button-row"><a class="button button-gold" href="<?= app_url('teach/index.php') ?>">Teacher portal</a><a class="button button-light" href="<?= app_url('portal.php') ?>">Return to dashboard</a></div></div></section>
+<section class="dashboard-hero"><div class="wrap dashboard-head"><div><span class="eyebrow light">Protected administration</span><h1>Student profiles and updates.</h1><p>Create privacy-safe sponsorship profiles and publish reviewed learning updates.</p></div><div class="button-row"><?php if($pendingUpdates>0): ?><a class="button button-gold" href="<?= app_url('teach/updates.php') ?>"><?= (int)$pendingUpdates ?> draft update<?= $pendingUpdates===1?'':'s' ?> to review</a><?php endif; ?><a class="button button-gold" href="<?= app_url('teach/index.php') ?>">Teacher portal</a><a class="button button-light" href="<?= app_url('portal.php') ?>">Return to dashboard</a></div></div></section>
 <section class="section cream"><div class="wrap">
 <div class="admin-warning"><strong>First names only.</strong><span>Use an approved first name or public nickname. Never enter a surname, birthdate, school, address, phone number, family hardship, medical information, or private contact details.</span></div>
 <?php if($success): ?><div class="alert success" role="status"><?= htmlspecialchars($success) ?></div><?php endif; ?><?php if($errors): ?><div class="alert error" role="alert"><strong>Please review:</strong><ul><?php foreach($errors as $error): ?><li><?= htmlspecialchars($error) ?></li><?php endforeach; ?></ul></div><?php endif; ?>

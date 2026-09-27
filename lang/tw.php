@@ -2,6 +2,11 @@
 /**
  * Twi (Akan) strings.
  *
+ * Twi clarifies English here; it does not replace it. English is the primary
+ * language of the site and the language of instruction the learners are
+ * heading into, so a key is worth translating only where the Twi genuinely
+ * helps a child understand what to do.
+ *
  * REVIEW REQUIRED: this is a starter set limited to words and phrases with a
  * settled everyday meaning. Every other key deliberately falls back to
  * English rather than guessing. A Twi speaker on the Accra staff must review

@@ -188,3 +188,54 @@ BASE_URL=http://localhost/ghana-school tests/smoke.sh
 Run it against a development database only — it creates learners and publishes
 pages. It expects the migrations applied plus two seeded accounts,
 `admin@example.org` and `teacher@example.org`; the header comment lists them.
+
+### Sponsor bridge
+
+Turns reviewed classroom work into sponsor updates, through an approval gate.
+
+```
+mysql ghana_school < migrations/2026-09-28-sponsor-bridge.sql
+```
+
+Safe to run more than once. It does not change what sponsors currently see:
+existing updates are marked approved and stay visible, and updates written by
+hand in `admin.php` keep working.
+
+**Before a learner's work can reach a sponsor, an administrator must link them
+to a student journey** — Teacher portal → the learner → *Sponsor journey*. The
+link is the join between a real child and the pseudonymous profile a sponsor
+follows, so teachers cannot set it and one journey belongs to one learner.
+
+How it runs day to day:
+
+1. A teacher marks work as done and ticks **Propose this work for a sponsor
+   update**. The tick only appears for learners whose guardian agreed to it,
+   and the consent check is in the query, so a forced form post changes nothing.
+2. A draft appears under **Sponsor updates** (administrators only). The draft
+   text is built from facts about the lesson. It never contains what the learner
+   wrote — children write freely, and a child may have named themselves, their
+   school, or their street.
+3. The administrator reads the learner's words shown alongside as context,
+   **rewrites the update in their own words**, and approves it. Only then does a
+   sponsor see anything.
+
+Publishing a learner's page for the first time drafts a milestone the same way.
+
+Consent is checked again at approval, so if a guardian withdraws it between the
+draft being created and someone approving it, approval is refused.
+
+An approved update can be taken down again from the same page.
+
+The public **Why technology** page shows aggregate figures — learners enrolled,
+projects completed, pages published — drawn from the same records. They are
+counts only, no learner is identified, and the section is hidden until there is
+something real to report.
+
+### Language policy
+
+English is the primary language of the site. Ghanaian languages exist to help a
+learner understand an instruction, not to replace English, which is the language
+of instruction from Primary 4 and of every programming reference they will meet.
+
+The donor-facing side — the sponsor portal, sponsor updates, and the public
+pages — is English only and should stay that way. Sponsors read English.

@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/paths.php';
 require_once __DIR__ . '/../includes/roles.php';
 require_once __DIR__ . '/../includes/academy_nav.php';
+require_once __DIR__ . '/../includes/sponsor_bridge.php';
 
 $user = require_role('teacher');
 
@@ -22,6 +23,7 @@ $learners = $stmt->fetchAll();
 $cohorts = db()->query('SELECT id, name, term FROM cohorts ORDER BY active DESC, name')->fetchAll();
 $pendingPages = (int)db()->query('SELECT COUNT(*) FROM student_sites WHERE status=\'pending_review\'')->fetchColumn();
 $pendingWork  = (int)db()->query('SELECT COUNT(*) FROM submissions WHERE status=\'submitted\'')->fetchColumn();
+$pendingDrafts = is_admin_user($user) ? bridge_pending_count() : 0;
 
 $portalKind = 'staff';
 $portalName = 'Teacher portal';
@@ -41,6 +43,7 @@ require __DIR__ . '/../includes/academy_header.php';
     <a class="button-big" href="<?= app_url('teach/onboard.php') ?>">Onboard students</a>
     <?php if ($pendingWork): ?><a class="button-big gold" href="<?= app_url('teach/marking.php') ?>">Mark <?= $pendingWork ?> submission<?= $pendingWork === 1 ? '' : 's' ?></a><?php endif; ?>
     <?php if ($pendingPages): ?><a class="button-big gold" href="<?= app_url('teach/pages.php') ?>">Check <?= $pendingPages ?> page<?= $pendingPages === 1 ? '' : 's' ?></a><?php endif; ?>
+    <?php if ($pendingDrafts): ?><a class="button-big gold" href="<?= app_url('teach/updates.php') ?>">Approve <?= $pendingDrafts ?> sponsor update<?= $pendingDrafts === 1 ? '' : 's' ?></a><?php endif; ?>
 </div>
 
 <?php if ($cohorts): ?>

@@ -36,7 +36,23 @@ CURL=(curl -s)
 
 req()  { "${CURL[@]}" "$@"; }
 code() { "${CURL[@]}" -o /dev/null -w '%{http_code}' "$@"; }
+hdr()  { "${CURL[@]}" -D- -o /dev/null "$2" | grep -i "^$1:" | tr -d '\r' | sed "s/^[^:]*: //"; }
+bytes() { "${CURL[@]}" -o /dev/null -w '%{size_download}' "$@"; }
 tok()  { "${CURL[@]}" -b "$1" -c "$1" "$2" | grep -oP 'name="csrf" value="\K[^"]+' | head -1; }
+pass() { printf '  PASS  %s\n' "$1"; }
+fail() { printf '  FAIL  %s%s\n' "$1" "${2:+ ($2)}"; FAILED=1; }
+
+# A mistyped or undefined helper would otherwise skip its check while the
+# suite still reported success -- that has bitten twice. Turn it into a
+# visible failure. Bash may run this handler in a forked shell, where setting
+# FAILED would be lost, so leave a marker on disk and check it at the end.
+MISSING_COMMAND_MARKER="$JAR_DIR/.missing-command"
+command_not_found_handle() {
+  printf '  FAIL  the suite called a command that does not exist: %s\n' "$1"
+  : > "$MISSING_COMMAND_MARKER"
+  return 127
+}
+
 chk()  {
   if [ "$2" = "$3" ]; then printf '  PASS  %s\n' "$1"
   else printf '  FAIL  %s (expected %s, got %s)\n' "$1" "$3" "$2"; FAILED=1; fi
@@ -287,11 +303,51 @@ IMPACT=$(req "$BASE_URL/impact.php")
 chk "figures are shown"              "$(echo "$IMPACT" | grep -c 'Learners enrolled')" "1"
 chk "no learner is named publicly"   "$(echo "$IMPACT" | grep -ci 'Boateng\|Osu Primary')" "0"
 
+echo "-- caching: public pages revalidate, private pages never cache --"
+# A homepage visit is about 105 KB and nearly all of it never changes. These
+# checks keep the saving from being undone by accident.
+for page in index.php about.php impact.php bio.php foundation.php privacy.php adopt.php; do
+  CC=$(hdr cache-control "$BASE_URL/$page")
+  case "$CC" in
+    *private*no-cache*) ;;
+    *) chk "$page is cacheable by the visitor" "$CC" "private, no-cache, must-revalidate" ;;
+  esac
+done
+chk "public pages are revalidatable" \
+    "$(hdr cache-control "$BASE_URL/index.php")" "private, no-cache, must-revalidate"
+
+ETAG=$(hdr etag "$BASE_URL/index.php")
+chk "a public page carries an ETag" "$([ -n "$ETAG" ] && echo yes)" "yes"
+chk "a matching ETag gets 304" "$(code -H "If-None-Match: $ETAG" "$BASE_URL/index.php")" "304"
+chk "and sends no body"        "$(bytes -H "If-None-Match: $ETAG" "$BASE_URL/index.php")" "0"
+# mod_deflate hands the browser the tag with -gzip appended and gets it back
+# that way. Without tolerating that, every page would be sent in full.
+chk "a -gzip suffixed ETag still gets 304" \
+    "$(code -H "If-None-Match: ${ETAG%\"}-gzip\"" "$BASE_URL/index.php")" "304"
+chk "a stale ETag gets the page" "$(code -H 'If-None-Match: \"stale\"' "$BASE_URL/index.php")" "200"
+
+for page in login.php signup.php; do
+  CC=$(hdr cache-control "$BASE_URL/$page")
+  case "$CC" in
+    *no-store*) pass "$page is never stored" ;;
+    *) fail "$page is never stored" "$CC" ;;
+  esac
+done
+chk "a page with a form has no ETag" "$(hdr etag "$BASE_URL/login.php")" ""
+chk "the academy sign-in is never stored" \
+    "$(hdr cache-control "$BASE_URL/academy/login.php" | grep -c no-store)" "1"
+
+chk "assets are referenced with a version stamp" \
+    "$(req "$BASE_URL/index.php" | grep -c 'assets/css/style.css?v=')" "1"
+chk "no asset is referenced without one" \
+    "$(req "$BASE_URL/index.php" | grep -oP '(?<=\")[^\"]*assets/[^\"]*(?=\")' | grep -vc '?v=' || true)" "0"
+
 echo "-- take everything offline --"
 T=$(tok "$JAR_DIR/a.jar" "$BASE_URL/teach/pages.php")
 req -b "$JAR_DIR/a.jar" -c "$JAR_DIR/a.jar" -o /dev/null -d "csrf=$T" -d "action=unpublish_all" "$BASE_URL/teach/pages.php"
 chk "every page is offline" "$(code "$BASE_URL/students/$USERNAME/")" "404"
 
 echo
+[ -e "$MISSING_COMMAND_MARKER" ] && FAILED=1
 if [ "$FAILED" = "1" ]; then echo "SMOKE TEST FAILED"; exit 1; fi
 echo "SMOKE TEST PASSED"

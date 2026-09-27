@@ -37,6 +37,7 @@ offline for the whole room on the centre's Kolibri server.
 | Aggregate, non-identifying programme figures on the public impact page | Built — `impact.php` |
 | Kolibri at the centre: install kit, hardened provisioning, roster export, activity sync | Built — `tools/kolibri/`, `includes/centre_activity.php`, `api/kolibri_sync.php`, `teach/centre.php`, `docs/KOLIBRI_CENTRE_SETUP.md` |
 | Offline service worker for `/academy/`, with a work queue and an installable manifest | Built — `academy/sw.js`, `academy/offline.html`, `academy/manifest.webmanifest`, `assets/js/academy-offline.js` |
+| Caching and compression for low-bandwidth visitors | Built — `.htaccess`, `includes/assets.php`, `includes/header.php`. A repeat homepage visit went from 105.6 KB to 0.3 KB. |
 | Moodle or Chamilo on a subdomain | **Not built**, and only if the programme outgrows the above |
 
 Setup instructions are in `SETUP.md`. Funding and free resources are in

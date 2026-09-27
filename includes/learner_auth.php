@@ -28,6 +28,9 @@ function learner_session_start(): void {
         session_write_close();
     }
     session_name(LEARNER_SESSION);
+    // The academy header sends no-store itself; see includes/auth.php for why
+    // the session no longer decides this.
+    session_cache_limiter('');
     session_set_cookie_params([
         'httponly' => true,
         'samesite' => 'Lax',
@@ -35,6 +38,11 @@ function learner_session_start(): void {
         'path'     => '/',   // the draft preview under /students/ needs to read it
     ]);
     session_start();
+
+    // Same safe default as the sponsor side; the academy header keeps it.
+    if (!headers_sent()) {
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+    }
 
     // Idle timeout. Children share computers; a forgotten session is a real risk.
     if (!empty($_SESSION['learner_id'])) {

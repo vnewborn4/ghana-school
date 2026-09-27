@@ -4,6 +4,9 @@ $pageDescription='Choose a privacy-safe student learning journey to support in A
 require_once 'includes/db.php';
 $journeys=[]; $loadError=false;
 try { $journeys=db()->query("SELECT * FROM student_journeys WHERE active=1 ORDER BY id")->fetchAll(); } catch (Throwable $e) { $loadError=true; }
+// Nothing on this page is personal, so it may be kept by the visitor's
+// own browser and revalidated. See the cache policy in includes/header.php.
+$publicPage = true;
 include 'includes/header.php';
 ?>
 <section class="page-hero"><div class="wrap"><span class="eyebrow">Step 1 of 2 · Choose a journey</span><h1>Support the learner. Protect the child.</h1><p class="lede">Choose a learning journey based on interests and goals. Profiles use privacy-safe labels—never full names, schools, family circumstances, or direct contact details.</p></div></section>

@@ -132,19 +132,47 @@ async function handleNavigation(request) {
 }
 
 /**
+ * Store a shell asset, and drop any older copy of the same file.
+ *
+ * Pages ask for assets with a ?v= stamp so the browser cache can hold them
+ * for a week without ever going stale. Each new version is a new URL, so
+ * without this the cache would keep every version ever shipped.
+ */
+async function putAndPrune(cache, request, response) {
+    await cache.put(request, response.clone());
+
+    const fresh = new URL(request.url);
+    const keys = await cache.keys();
+    await Promise.all(keys.map((key) => {
+        const old = new URL(key.url);
+        return (old.pathname === fresh.pathname && old.search !== fresh.search)
+            ? cache.delete(key)
+            : Promise.resolve(false);
+    }));
+}
+
+/**
  * Serve the shell from the cache straight away, and refresh it in the
  * background. On a slow connection the interface appears at once; on the next
  * visit it is up to date.
+ *
+ * An exact miss falls back to any copy of the same file with a different ?v=
+ * stamp. Just after a deploy that means the page still paints immediately
+ * from the previous stylesheet while the new one downloads, rather than
+ * waiting on the network.
  */
 async function handleShellAsset(request) {
     const cache = await caches.open(SHELL_CACHE);
-    const cached = await cache.match(request);
+    const exact = await cache.match(request);
+    const cached = exact || await cache.match(request, { ignoreSearch: true });
 
     const network = fetch(request).then((response) => {
-        if (response && response.ok) cache.put(request, response.clone());
+        if (response && response.ok) putAndPrune(cache, request, response);
         return response;
     }).catch(() => null);
 
+    // An exact hit needs nothing else. A stale-version hit is served now and
+    // replaced by the download already under way.
     if (cached) return cached;
 
     const fresh = await network;

@@ -7,6 +7,9 @@ require_once 'includes/sponsor_bridge.php';
 // there is something real to report.
 try { $figures = bridge_public_figures(); } catch (Throwable $e) { $figures = ['learners'=>0,'completed'=>0,'pages'=>0]; }
 $hasFigures = array_sum($figures) > 0;
+// Nothing on this page is personal, so it may be kept by the visitor's
+// own browser and revalidated. See the cache policy in includes/header.php.
+$publicPage = true;
 include 'includes/header.php';
 ?>
 <section class="page-hero"><div class="wrap"><span class="eyebrow">Why technology, why now</span><h1>Skills that can travel across industries and borders.</h1><p class="lede">Technology education does not guarantee a particular outcome. It does expand the set of problems a young person can solve, the ideas they can create, and the opportunities they can pursue.</p></div></section>

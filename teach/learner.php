@@ -303,5 +303,5 @@ require __DIR__ . '/../includes/academy_header.php';
 </div>
 <?php endif; ?>
 
-<script defer src="<?= app_url('assets/js/academy.js') ?>"></script>
+<script defer src="<?= asset_url('assets/js/academy.js') ?>"></script>
 <?php require __DIR__ . '/../includes/academy_footer.php'; ?>

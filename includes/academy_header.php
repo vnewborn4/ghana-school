@@ -17,6 +17,7 @@
 require_once __DIR__ . '/paths.php';
 require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/i18n.php';
+require_once __DIR__ . '/assets.php';
 add_security_headers();
 
 $portalKind = $portalKind ?? 'student';
@@ -47,13 +48,13 @@ if (!headers_sent()) {
     <meta name="csrf-token" content="<?= htmlspecialchars($csrfToken) ?>">
     <?php endif; ?>
     <title><?= htmlspecialchars($pageTitle) ?> | Mill Creek-AR Academy</title>
-    <link rel="icon" type="image/svg+xml" href="<?= app_url('assets/images/brand-mark.svg') ?>">
+    <link rel="icon" type="image/svg+xml" href="<?= asset_url('assets/images/brand-mark.svg') ?>">
     <?php if ($portalKind === 'student'): ?>
     <link rel="manifest" href="<?= app_url('academy/manifest.webmanifest') ?>">
-    <link rel="apple-touch-icon" href="<?= app_url('assets/images/academy-icon-192.png') ?>">
+    <link rel="apple-touch-icon" href="<?= asset_url('assets/images/academy-icon-192.png') ?>">
     <?php endif; ?>
-    <link rel="stylesheet" href="<?= app_url('assets/css/style.css') ?>">
-    <link rel="stylesheet" href="<?= app_url('assets/css/academy.css') ?>">
+    <link rel="stylesheet" href="<?= asset_url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= asset_url('assets/css/academy.css') ?>">
 </head>
 <body class="academy academy-<?= htmlspecialchars($portalKind) ?>"
       data-base-path="<?= htmlspecialchars(BASE_PATH) ?>"
@@ -64,7 +65,7 @@ if (!headers_sent()) {
 <header class="academy-bar">
     <div class="academy-bar-inner">
         <a class="academy-brand" href="<?= app_url($portalKind === 'staff' ? 'teach/index.php' : 'academy/index.php') ?>">
-            <img src="<?= app_url('assets/images/brand-mark.svg') ?>" alt="" width="38" height="38">
+            <img src="<?= asset_url('assets/images/brand-mark.svg') ?>" alt="" width="38" height="38">
             <span><strong>Mill Creek-AR</strong><small><?= htmlspecialchars($portalName) ?></small></span>
         </a>
 

@@ -6,7 +6,7 @@
     <?php endif; ?>
 </footer>
 <?php if (($portalKind ?? 'student') === 'student'): ?>
-<script src="<?= app_url('assets/js/academy-offline.js') ?>" defer></script>
+<script src="<?= asset_url('assets/js/academy-offline.js') ?>" defer></script>
 <?php endif; ?>
 </body>
 </html>

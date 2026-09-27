@@ -14,7 +14,19 @@ if (!function_exists('app_url')) {
 if (session_status() !== PHP_SESSION_ACTIVE) {
     $cookiePath = BASE_PATH !== '' ? BASE_PATH . '/' : '/';
     session_set_cookie_params(['httponly'=>true,'samesite'=>'Lax','secure'=>!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off','path'=>$cookiePath]);
+    // PHP would otherwise stamp every page that opens a session with
+    // no-store, which made the public pages uncacheable and cost every
+    // visitor a full re-download. Each page states its own policy instead:
+    // includes/header.php sends no-store unless the page opts in as public.
+    session_cache_limiter('');
     session_start();
+
+    // Safe default for every page, including the ones that redirect before
+    // they reach a header and so never state a policy of their own.
+    // includes/header.php relaxes this for pages that opt in as public.
+    if (!headers_sent()) {
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+    }
 }
 function csrf_token(): string {
     if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));

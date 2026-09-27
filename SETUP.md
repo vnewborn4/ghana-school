@@ -349,3 +349,62 @@ production this is not a concern: the site already forces HTTPS.
 Playwright is a development dependency and is not in the repository:
 `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install playwright`, then set
 `PLAYWRIGHT_PATH` if it is not on the default module path.
+
+## Caching and bandwidth
+
+Most visitors are on metered mobile data in Accra, so repeat visits should cost
+almost nothing. Measured in a browser, a homepage visit was **105.6 KB**; a
+returning visitor now pays **0.3 KB**, and a second page costs only its own
+HTML.
+
+### How it is arranged
+
+**Static files** — stylesheets, scripts, images, fonts, the manifest — are
+served with `public, max-age=604800, stale-while-revalidate=2592000` by
+`.htaccess`, and compressed with `mod_deflate` (the stylesheet drops from
+21 KB to 5 KB). PHP references them through `asset_url()`, which appends the
+file's modification time, so a changed file gets a new URL and is picked up
+immediately. The one-week figure only applies to references without that
+stamp; it is a week rather than a year so that nobody can be stranded on a
+stale stylesheet.
+
+`academy/sw.js` is excluded and stays `no-cache`: a service worker must never
+be served stale.
+
+**Pages** default to `no-store`. That default is set in `includes/auth.php`,
+right after the session starts, so even a page that redirects before reaching
+a header is covered.
+
+**Public pages opt in** by setting `$publicPage = true;` before including
+`includes/header.php` — currently the homepage, our story, why technology,
+founder, partnership, privacy and sponsor-a-journey. They are sent as
+`private, no-cache, must-revalidate` with an ETag, so the browser revalidates
+every time but the body is only sent when it has actually changed.
+
+They are `private`, not `public`, because the navigation differs by whether
+someone is signed in: no shared proxy may keep a copy. The ETag is a hash of
+the finished page, so a signed-in visitor and an anonymous one naturally get
+different tags and can never be served each other's copy.
+
+### If you add a page
+
+A page showing anything personal needs nothing — `no-store` is the default. A
+page that is the same for everyone should set `$publicPage = true;`. Do not
+set it on a page with a form: a CSRF token in a cached page is asking for
+trouble, and the saving on those pages is small anyway.
+
+### Previously
+
+Every page, including the marketing pages, sent `no-store`. That came from
+PHP's session cache limiter, which stamps any page that opens a session, and
+`includes/header.php` opens one on every request. The limiter is now switched
+off and each page states its own policy instead.
+
+### Worth a look: unused media
+
+`assets/videos/` holds **27 MB of .MOV files that no page references**, and
+about 3.8 MB of the images are unreferenced too, including several exact
+duplicates with " (1).JPG" in the name. That is roughly 31 MB uploaded to the
+server on every full deploy for no benefit. Nothing has been deleted — they
+are your files and you may want them — but they are worth pruning, or adding
+to the deploy `exclude` list in `.github/workflows/`.

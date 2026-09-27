@@ -1,5 +1,8 @@
 <?php
 $pageTitle = 'Privacy Policy & Data Retention';
+// Nothing on this page is personal, so it may be kept by the visitor's
+// own browser and revalidated. See the cache policy in includes/header.php.
+$publicPage = true;
 require_once 'includes/header.php';
 ?>
 

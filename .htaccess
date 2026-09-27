@@ -39,6 +39,35 @@
     </IfModule>
 </FilesMatch>
 
+# ---------------------------------------------------------------------------
+# Bandwidth
+#
+# Most visitors are on metered mobile data in Accra. A homepage visit is about
+# 105 KB, and roughly 95 KB of that is static files that do not change between
+# visits. These two blocks mean a returning visitor pays for almost none of it.
+# ---------------------------------------------------------------------------
+
+# Compress text on the way out. The stylesheet alone drops from about 21 KB to
+# a quarter of that.
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript text/javascript
+    AddOutputFilterByType DEFLATE application/json application/manifest+json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# Cache static files. PHP references them through asset_url(), which appends
+# the file's modification time, so a new upload gets a new URL and is picked
+# up straight away. The week here only applies to references without that
+# stamp, which is why it is a week and not a year: nobody should be stranded
+# on a stale stylesheet, and stale-while-revalidate refreshes it in the
+# background rather than making anyone wait.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|jpe?g|png|gif|webp|svg|ico|woff2?|ttf|eot|webmanifest)$">
+        Header set Cache-Control "public, max-age=604800, stale-while-revalidate=2592000"
+    </FilesMatch>
+</IfModule>
+
 # The web app manifest needs its own media type for browsers to accept it.
 <IfModule mod_mime.c>
     AddType application/manifest+json .webmanifest
@@ -47,6 +76,8 @@
 # The service worker must not be served stale, or a fixed bug can stay on a
 # learner's device for a day. Browsers already bypass the HTTP cache when
 # checking for an update, but say so explicitly.
+# Overrides the .js rule above: a service worker must never be served stale,
+# or a fixed bug can sit on a learner's device for a day.
 <Files "sw.js">
     <IfModule mod_headers.c>
         Header set Cache-Control "no-cache, max-age=0"

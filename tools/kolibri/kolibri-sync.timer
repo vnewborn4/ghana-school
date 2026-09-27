@@ -1,0 +1,15 @@
+[Unit]
+Description=Report Kolibri activity to the website daily
+Documentation=file:///usr/local/bin/kolibri-sync.py
+
+[Timer]
+# Late evening, after the centre has closed, so the day is complete.
+OnCalendar=*-*-* 21:40:00
+# The centre's power and connection are both unreliable, so catch up on a run
+# that was missed rather than skipping the day.
+Persistent=true
+# Spread the start, so a whole fleet does not call at the same second.
+RandomizedDelaySec=900
+
+[Install]
+WantedBy=timers.target

@@ -7,8 +7,8 @@ Covers: onboarding automation, per-student web directories, student / teacher / 
 portals, open-source coding tools, dual-language (English + Ghanaian language) support,
 and cultural and legal fit for a program in Accra.
 
-Status: **phases 1–4 and 6 are built and running**; see "What is built" below.
-Phases 5 and 7 remain proposals.
+Status: **phases 1–6 are built and running**; see "What is built" below.
+Phase 7 remains a proposal.
 
 ---
 
@@ -31,7 +31,8 @@ Phases 5 and 7 remain proposals.
 | Sponsor bridge: shareable work becoming a draft sponsor update | Built — `includes/sponsor_bridge.php`, `teach/updates.php`, `migrations/2026-09-28-sponsor-bridge.sql` |
 | Learner ↔ journey link, administrators only | Built — `teach/learner.php` |
 | Aggregate, non-identifying programme figures on the public impact page | Built — `impact.php` |
-| Kolibri at the centre, offline service worker | **Not built** — no web development needed for Kolibri; see phase 5 |
+| Kolibri at the centre: install kit, hardened provisioning, roster export, activity sync | Built — `tools/kolibri/`, `includes/centre_activity.php`, `api/kolibri_sync.php`, `teach/centre.php`, `docs/KOLIBRI_CENTRE_SETUP.md` |
+| Offline service worker for `/academy/` | **Not built** — the remaining part of phase 5 |
 | Moodle or Chamilo on a subdomain | **Not built**, and only if the programme outgrows the above |
 
 Setup instructions are in `SETUP.md`. Funding and free resources are in

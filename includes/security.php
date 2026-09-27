@@ -98,11 +98,31 @@ function is_email_verified(int $user_id): bool {
 /**
  * Webhook signature verification (generic HMAC-SHA256)
  * Usage: verify_webhook_signature($_POST, 'your-webhook-secret', $_SERVER['HTTP_X_SIGNATURE'] ?? '')
+ *
+ * Note: this re-encodes the payload before hashing, so it only works where the
+ * sender signed a re-serialisation of the same array. A sender that signs the
+ * raw request body needs verify_signature_raw() below, which hashes the bytes
+ * that actually arrived.
  */
 function verify_webhook_signature(array $payload, string $secret, string $signature): bool {
     $body = json_encode($payload);
     $expected = 'sha256=' . hash_hmac('sha256', $body, $secret);
     return hash_equals($expected, $signature);
+}
+
+/**
+ * Verify an HMAC-SHA256 signature over the RAW request body.
+ *
+ * Signing the bytes that arrived, rather than a re-encoding of them, is the
+ * only way the two sides can agree: key order, spacing and unicode escaping
+ * all differ between JSON encoders.
+ *
+ * $header is the full header value, e.g. "sha256=<hex>".
+ */
+function verify_signature_raw(string $rawBody, string $secret, string $header): bool {
+    if ($secret === '' || $header === '') return false;
+    $expected = 'sha256=' . hash_hmac('sha256', $rawBody, $secret);
+    return hash_equals($expected, trim($header));
 }
 
 /**

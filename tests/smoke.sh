@@ -17,6 +17,9 @@
 #   teacher@example.org / TestTeach!2026   role=teacher
 #   sponsor@example.org / TestSpon!2026    role=sponsor, with an active
 #                                          sponsorship of a student journey
+#
+# The Kolibri sync checks are skipped unless KOLIBRI_SYNC_SECRET is set to the
+# same value the web server runs with.
 # and at least one cohort. Run it against a development database only: it
 # creates learners, publishes pages, and publishes sponsor updates.
 
@@ -46,6 +49,21 @@ chk_min() {
 }
 
 echo "Smoke test against $BASE_URL"
+
+# This suite creates learners, links journeys and publishes updates, so it
+# needs a database that has not been through it before. Say so plainly rather
+# than failing later in a way that looks like a real bug.
+T=$(tok "$JAR_DIR/pre.jar" "$BASE_URL/login.php")
+req -b "$JAR_DIR/pre.jar" -c "$JAR_DIR/pre.jar" -o /dev/null \
+    -d "csrf=$T" -d "email=teacher@example.org" -d "password=TestTeach!2026" "$BASE_URL/login.php"
+EXISTING=$(req -b "$JAR_DIR/pre.jar" "$BASE_URL/teach/index.php" | grep -c 'learner\.php?id=' || true)
+if [ "$EXISTING" -gt 0 ]; then
+  echo
+  echo "This database already holds $EXISTING learner(s)."
+  echo "The suite needs a fresh one. Reload the schema and migrations, re-seed"
+  echo "the three accounts in the header comment, then run it again."
+  exit 2
+fi
 
 echo "-- roles --"
 T=$(tok "$JAR_DIR/t.jar" "$BASE_URL/login.php")
@@ -216,6 +234,53 @@ T=$(tok "$JAR_DIR/t.jar" "$BASE_URL/teach/marking.php?id=$SUB2")
 MARKED2=$(req -b "$JAR_DIR/t.jar" -c "$JAR_DIR/t.jar" \
     -d "csrf=$T" -d "submission_id=$SUB2" -d "decision=reviewed" -d "shareable=1" "$BASE_URL/teach/marking.php")
 chk "a forced shareable flag drafts nothing" "$(echo "$MARKED2" | grep -c 'draft sponsor update')" "0"
+
+echo "-- learning centre sync --"
+chk "an unsigned sync is refused" \
+    "$(code -X POST -d '{"version":1,"rows":[]}' "$BASE_URL/api/kolibri_sync.php")" "401"
+chk "a wrong signature is refused" \
+    "$(code -X POST -H 'X-Signature: sha256=deadbeef' -d '{"version":1,"rows":[]}' "$BASE_URL/api/kolibri_sync.php")" "401"
+chk "GET is refused" "$(code "$BASE_URL/api/kolibri_sync.php")" "405"
+
+if [ -n "${KOLIBRI_SYNC_SECRET:-}" ]; then
+  TODAY=$(date -u +%Y-%m-%d)
+  STAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  # The signature covers the exact bytes sent, so the body is built once and
+  # reused for both the hash and the request.
+  BODY="{\"device\":\"smoke-test\",\"facility\":\"Smoke\",\"generated_at\":\"$STAMP\",\"rows\":[{\"completed\":2,\"date\":\"$TODAY\",\"minutes\":30,\"sessions\":3,\"username\":\"$(echo "$USERNAME" | tr '-' '_')\"}],\"version\":1,\"window\":{\"from\":\"$TODAY\",\"to\":\"$TODAY\"}}"
+  SIG="sha256=$(printf '%s' "$BODY" | openssl dgst -sha256 -hmac "$KOLIBRI_SYNC_SECRET" -r | cut -d' ' -f1)"
+  SYNC=$(req -X POST -H 'Content-Type: application/json' -H "X-Signature: $SIG" -d "$BODY" "$BASE_URL/api/kolibri_sync.php")
+  chk "a signed sync is accepted"   "$(echo "$SYNC" | grep -c '"ok":true')" "1"
+  # The learner's Kolibri username is their academy slug with underscores, so
+  # the row must come back linked to their account.
+  chk "the row matches the learner"  "$(echo "$SYNC" | grep -c '"matched":1')" "1"
+  # Re-sending the same window must not double count. Compare the totals
+  # before and after rather than a fixed number, so the check means the same
+  # thing whatever else is in the database.
+  sessions_total() {
+    req -b "$JAR_DIR/t.jar" -c "$JAR_DIR/t.jar" "$BASE_URL/teach/centre.php" \
+      | grep -oP 'Sessions</td><td><strong>\K[0-9]+' | head -1
+  }
+  BEFORE_SESSIONS=$(sessions_total)
+  req -X POST -H 'Content-Type: application/json' -H "X-Signature: $SIG" -d "$BODY" "$BASE_URL/api/kolibri_sync.php" > /dev/null
+  chk "re-syncing does not double count" "$(sessions_total)" "$BEFORE_SESSIONS"
+
+  # A payload dated far in the past is refused: a Raspberry Pi with no
+  # battery clock can come back with the wrong year.
+  OLDBODY="{\"device\":\"smoke-test\",\"generated_at\":\"2001-01-01T00:00:00Z\",\"rows\":[],\"version\":1}"
+  OLDSIG="sha256=$(printf '%s' "$OLDBODY" | openssl dgst -sha256 -hmac "$KOLIBRI_SYNC_SECRET" -r | cut -d' ' -f1)"
+  chk "a payload with a wrong clock is refused" \
+      "$(code -X POST -H "X-Signature: $OLDSIG" -d "$OLDBODY" "$BASE_URL/api/kolibri_sync.php")" "422"
+else
+  echo "  SKIP  signed sync checks (set KOLIBRI_SYNC_SECRET to run them)"
+fi
+
+echo "-- the Kolibri roster export --"
+ROSTER_CSV=$(req -b "$JAR_DIR/t.jar" -c "$JAR_DIR/t.jar" "$BASE_URL/teach/kolibri_roster.php")
+chk "the roster carries Kolibri's header" "$(echo "$ROSTER_CSV" | grep -c 'Username (USERNAME)')" "1"
+chk "usernames use underscores, not hyphens" \
+    "$(echo "$ROSTER_CSV" | tail -n +2 | grep -c -- '-' || true)" "0"
+chk "no surname column is filled" "$(echo "$ROSTER_CSV" | grep -ci 'Boateng')" "0"
 
 echo "-- public figures are aggregates only --"
 IMPACT=$(req "$BASE_URL/impact.php")

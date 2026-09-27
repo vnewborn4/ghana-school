@@ -43,5 +43,6 @@ jobs:
             migrations/**
             docs/**
             tests/**
+            tools/**
             storage/student_sites/**
             storage/submissions/**

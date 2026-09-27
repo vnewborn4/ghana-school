@@ -239,3 +239,45 @@ of instruction from Primary 4 and of every programming reference they will meet.
 
 The donor-facing side — the sponsor portal, sponsor updates, and the public
 pages — is English only and should stay that way. Sponsors read English.
+
+## The learning centre's Kolibri server
+
+Kolibri is an offline-first learning platform that runs on a Raspberry Pi or a
+spare laptop **at the centre in Accra**, serving lessons over the centre's own
+Wi-Fi with no internet at all. It is not installed on this web host and cannot
+be: it is Python, and the point of it is to work where the line does not.
+
+The full runbook — hardware, install, content, learners, backups,
+troubleshooting — is `docs/KOLIBRI_CENTRE_SETUP.md`. The install kit is
+`tools/kolibri/`, which is excluded from the web deploy because it belongs on
+the centre machine, not here.
+
+What the website does with it:
+
+```
+mysql ghana_school < migrations/2026-09-29-centre-activity.sql
+```
+
+**Roster out.** Teacher portal → **Centre** → *Download roster for Kolibri*
+gives a CSV in Kolibri's own import format, so a learner onboarded here gets
+the same username at the centre. Kolibri does not allow hyphens in usernames,
+so `ama-k9` is carried across as `ama_k9`; the website does the swap in both
+directions and shows the Kolibri username on the learner's page.
+
+**Activity back.** Two routes, one format, same result:
+
+- *Offline, the normal route.* At the centre,
+  `kolibri-sync.py --days 30 --out /media/usb/kolibri-sync.json`, then upload
+  that file under **Centre → Upload activity**.
+- *Automatic, when there is a line.* The centre posts the same payload to
+  `api/kolibri_sync.php`, signed with a shared secret. Set
+  `KOLIBRI_SYNC_SECRET` on this server to a long random string and the same
+  value in `/etc/kolibri-sync.env` at the centre. Without the secret the
+  endpoint refuses everything rather than accepting unsigned data.
+
+Re-sending the same window is safe: rows are keyed on the day and the learner.
+
+Only counts travel — a date, a Kolibri username, sessions, completions,
+minutes. No content titles, no real names, nothing a child typed. The figures
+appear on the learner's page, in the programme report, and in the aggregate
+totals on the public page.

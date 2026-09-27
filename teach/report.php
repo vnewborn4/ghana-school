@@ -8,6 +8,7 @@
 require_once __DIR__ . '/../includes/paths.php';
 require_once __DIR__ . '/../includes/roles.php';
 require_once __DIR__ . '/../includes/academy_nav.php';
+require_once __DIR__ . '/../includes/centre_activity.php';
 
 $user = require_role('teacher');
 
@@ -32,6 +33,8 @@ $submitted = $one('SELECT COUNT(*) FROM submissions WHERE submitted_at BETWEEN ?
 $reviewed  = $one('SELECT COUNT(*) FROM submissions WHERE status=\'reviewed\' AND reviewed_at BETWEEN ? AND ?', [$from, $toEnd]);
 $published = $one('SELECT COUNT(*) FROM student_sites WHERE status=\'published\' AND published_at <= ?', [$toEnd]);
 $badges    = $one('SELECT COUNT(*) FROM learner_badges WHERE awarded_on BETWEEN ? AND ?', [$from, $toEnd]);
+
+$centre = centre_totals($from, $to);
 
 $stmt = db()->prepare('SELECT gender, COUNT(*) AS n FROM learners WHERE created_at <= ? GROUP BY gender');
 $stmt->execute([$toEnd]);
@@ -124,6 +127,25 @@ require __DIR__ . '/../includes/academy_header.php';
     </table>
     </div>
 </div>
+
+<?php if ((int)$centre['days_open'] > 0): ?>
+<div class="academy-card">
+    <h2>At the learning centre</h2>
+    <p class="field-hint">From the centre's own Kolibri server in Accra, which runs whether or
+       not there is an internet connection.</p>
+    <div class="table-scroll">
+    <table class="staff-table">
+        <tbody>
+            <tr><td>Days the centre was in use</td><td><strong><?= (int)$centre['days_open'] ?></strong></td></tr>
+            <tr><td>Learners who used it</td><td><strong><?= (int)$centre['learners'] ?></strong></td></tr>
+            <tr><td>Sessions</td><td><strong><?= (int)$centre['sessions'] ?></strong></td></tr>
+            <tr><td>Activities completed</td><td><strong><?= (int)$centre['completed'] ?></strong></td></tr>
+            <tr><td>Learning time</td><td><strong><?= number_format((int)$centre['minutes'] / 60, 1) ?> hours</strong></td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+<?php endif; ?>
 
 <?php if ($byAge): ?>
 <div class="academy-card">

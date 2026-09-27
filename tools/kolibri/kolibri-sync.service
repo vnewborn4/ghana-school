@@ -1,0 +1,16 @@
+[Unit]
+Description=Report Kolibri activity to the Mill Creek-AR website
+Documentation=file:///usr/local/bin/kolibri-sync.py
+After=kolibri.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+EnvironmentFile=/etc/kolibri-sync.env
+# --quiet so a successful run is silent and the journal shows only problems.
+# A failure exits non-zero, so `systemctl status kolibri-sync` tells the truth.
+ExecStart=/usr/local/bin/kolibri-sync.py --days 30 --post --quiet
+# There is no internet at the centre much of the time. A failed run is
+# expected and harmless: the next one sends the same window again.
+SuccessExitStatus=0

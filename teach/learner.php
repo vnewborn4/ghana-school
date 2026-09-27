@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/roles.php';
 require_once __DIR__ . '/../includes/onboarding.php';
 require_once __DIR__ . '/../includes/student_sites.php';
 require_once __DIR__ . '/../includes/academy_nav.php';
+require_once __DIR__ . '/../includes/centre_activity.php';
 
 $user = require_role('teacher');
 $learnerId = (int)($_GET['id'] ?? 0);
@@ -113,6 +114,7 @@ $stmt->execute([$learnerId]);
 $submissions = $stmt->fetchAll();
 
 $cohorts = db()->query('SELECT id, name, term FROM cohorts WHERE active=1 ORDER BY name')->fetchAll();
+$centre  = centre_learner_totals($learnerId);
 $locked  = !empty($learner['locked_until']) && strtotime($learner['locked_until']) > time();
 
 $portalKind = 'staff';
@@ -241,6 +243,26 @@ require __DIR__ . '/../includes/academy_header.php';
         <p class="field-hint" style="margin-top:12px"><strong>Note:</strong> this learner's guardian
            agreed to learning only, so no sponsor update can be created even once a journey is linked.</p>
     <?php endif; ?>
+</div>
+<?php endif; ?>
+
+<?php if ((int)$centre['days'] > 0): ?>
+<div class="academy-card">
+    <h2>At the learning centre</h2>
+    <p class="field-hint">Reported by the centre's Kolibri server. Their Kolibri username is
+       <code><?= htmlspecialchars(centre_slug_to_username($learner['username'])) ?></code> &mdash;
+       Kolibri does not allow hyphens, so the academy slug is carried across with underscores.</p>
+    <div class="table-scroll">
+    <table class="staff-table">
+        <tbody>
+            <tr><td>Days attended</td><td><strong><?= (int)$centre['days'] ?></strong></td></tr>
+            <tr><td>Sessions</td><td><strong><?= (int)$centre['sessions'] ?></strong></td></tr>
+            <tr><td>Activities completed</td><td><strong><?= (int)$centre['completed'] ?></strong></td></tr>
+            <tr><td>Learning time</td><td><strong><?= number_format((int)$centre['minutes'] / 60, 1) ?> hours</strong></td></tr>
+            <tr><td>Last seen at the centre</td><td><strong><?= $centre['last_seen'] ? htmlspecialchars(date('j M Y', strtotime($centre['last_seen']))) : '—' ?></strong></td></tr>
+        </tbody>
+    </table>
+    </div>
 </div>
 <?php endif; ?>
 

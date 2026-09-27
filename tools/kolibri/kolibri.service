@@ -1,0 +1,31 @@
+[Unit]
+Description=Kolibri learning platform (Mill Creek-AR Learning Center)
+Documentation=https://kolibri.readthedocs.io/
+After=network.target
+# No After=network-online.target on purpose: Kolibri must come up whether or
+# not the centre has an internet connection. Serving lessons over the local
+# network is the normal case, not the fallback.
+
+[Service]
+Type=simple
+User=__KOLIBRI_USER__
+Group=__KOLIBRI_USER__
+Environment=KOLIBRI_HOME=__KOLIBRI_HOME__
+ExecStart=__KOLIBRI_VENV__/bin/kolibri start --foreground
+ExecStop=__KOLIBRI_VENV__/bin/kolibri stop
+Restart=on-failure
+RestartSec=10
+# The centre loses power without warning. Give Kolibri time to close its
+# SQLite databases cleanly rather than killing it mid-write.
+TimeoutStopSec=120
+KillSignal=SIGTERM
+
+# Modest hardening. Kolibri needs to write only its own data directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=__KOLIBRI_HOME__
+
+[Install]
+WantedBy=multi-user.target

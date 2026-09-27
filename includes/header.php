@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/security.php';
+add_security_headers();
 $pageTitle = $pageTitle ?? 'Mill Creek-AR Learning Center';
 $pageDescription = $pageDescription ?? 'Technology education and mentorship for young people in Accra, Ghana.';
 $currentPage = basename($_SERVER['PHP_SELF'] ?? 'index.php');

@@ -1,12 +1,16 @@
 <?php
-require_once 'includes/auth.php'; require_once 'includes/db.php';
+require_once 'includes/auth.php'; require_once 'includes/db.php'; require_once 'includes/security.php';
 if(is_logged_in()){ header('Location: portal.php'); exit; }
 $error='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
-  verify_csrf(); $email=strtolower(trim((string)($_POST['email'] ?? ''))); $password=(string)($_POST['password'] ?? '');
-  $stmt=db()->prepare('SELECT id,password_hash FROM users WHERE email=?'); $stmt->execute([$email]); $user=$stmt->fetch();
-  if($user && password_verify($password,$user['password_hash'])){ login_user((int)$user['id']); header('Location: '.safe_return_path()); exit; }
-  $error='Email or password was not recognized.';
+  verify_csrf(); $ip=$_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+  if(!rate_limit('login',$ip,5,300)){ $error='Too many login attempts. Please wait 5 minutes and try again.'; }
+  else{
+    $email=strtolower(trim((string)($_POST['email'] ?? ''))); $password=(string)($_POST['password'] ?? '');
+    $stmt=db()->prepare('SELECT id,password_hash FROM users WHERE email=?'); $stmt->execute([$email]); $user=$stmt->fetch();
+    if($user && password_verify($password,$user['password_hash'])){ login_user((int)$user['id']); header('Location: '.safe_return_path()); exit; }
+    $error='Email or password was not recognized.';
+  }
 }
 $pageTitle='Sponsor Sign In'; $pageDescription='Sign in to view sponsorship status and student learning updates.'; include 'includes/header.php';
 ?>

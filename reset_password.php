@@ -30,7 +30,7 @@ if ($rawToken !== '') {
         } else {
             $error = 'This password reset link is invalid or has already been used.';
         }
-    } catch (Throwable $e) {
+    } catch (Exception $e) {
         $error = 'Database error checking reset token.';
     }
 } else {
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValid) {
 
             header('Location: ' . app_url('login.php?reset=1'));
             exit;
-        } catch (Throwable $e) {
+        } catch (Exception $e) {
             $errors[] = 'Unable to update password. Please try again.';
         }
     }

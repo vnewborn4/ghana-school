@@ -94,7 +94,7 @@ try {
     http_response_code(200);
     exit('No matching pending sponsorship found');
 
-} catch (Throwable $e) {
+} catch (Exception $e) {
     http_response_code(500);
     exit('Database error: ' . $e->getMessage());
 }

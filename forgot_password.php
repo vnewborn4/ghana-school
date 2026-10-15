@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             $submitted = true;
-        } catch (Throwable $e) {
+        } catch (Exception $e) {
             $error = 'Unable to process reset request. Please try again later.';
         }
     }

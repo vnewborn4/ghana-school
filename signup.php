@@ -30,7 +30,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
       $insert->execute([$userId,$journey['id'],$amount,$frequency,$provider]); $sponsorshipId=(int)$pdo->lastInsertId(); $pdo->commit(); login_user($userId);
       $link=payment_link($provider,$frequency,(float)$amount); if($link){ header('Location: '.$link,true,303); exit; }
       header('Location: checkout_pending.php?sponsorship_id='.$sponsorshipId,true,303); exit;
-    }catch(Throwable $e){ if($pdo->inTransaction())$pdo->rollBack(); $errors[]='We could not create the sponsorship. Please try again.'; }
+    }catch(Exception $e){ if($pdo->inTransaction())$pdo->rollBack(); $errors[]='We could not create the sponsorship. Please try again.'; }
   }
 }
 $pageTitle='Create Your Sponsor Account'; $pageDescription='Create a secure donor account and begin supporting a student learning journey.'; include 'includes/header.php';

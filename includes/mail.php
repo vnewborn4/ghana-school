@@ -6,9 +6,9 @@
 /**
  * Send email verification link to new sponsor
  */
-function send_verification_email(string $email, string $first_name, string $token): bool {
-    $verify_url = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'millcreek-ar-learning.com')
-        . app_url('verify-email.php') . '?token=' . urlencode($token);
+function send_verification_email($email, $first_name, $token) {
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'millcreek-ar-learning.com';
+    $verify_url = 'https://' . $host . app_url('verify-email.php') . '?token=' . urlencode($token);
 
     $subject = 'Verify Your Email - Mill Creek-AR Learning Center';
     $html = <<<HTML
@@ -38,7 +38,7 @@ function send_verification_email(string $email, string $first_name, string $toke
         </div>
     </body>
     </html>
-    HTML;
+HTML;
 
     return send_mail($email, $subject, $html);
 }
@@ -46,7 +46,7 @@ function send_verification_email(string $email, string $first_name, string $toke
 /**
  * Send donation receipt/confirmation
  */
-function send_donation_receipt(string $email, string $first_name, float $amount, string $frequency, string $student_name): bool {
+function send_donation_receipt($email, $first_name, $amount, $frequency, $student_name) {
     $subject = 'Donation Confirmation - Mill Creek-AR Learning Center';
     $html = <<<HTML
     <!DOCTYPE html>
@@ -76,7 +76,7 @@ function send_donation_receipt(string $email, string $first_name, float $amount,
         </div>
     </body>
     </html>
-    HTML;
+HTML;
 
     return send_mail($email, $subject, $html);
 }
@@ -84,9 +84,9 @@ function send_donation_receipt(string $email, string $first_name, float $amount,
 /**
  * Send password reset link
  */
-function send_password_reset_email(string $email, string $first_name, string $token): bool {
-    $reset_url = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'millcreek-ar-learning.com')
-        . app_url('reset_password.php') . '?token=' . urlencode($token);
+function send_password_reset_email($email, $first_name, $token) {
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'millcreek-ar-learning.com';
+    $reset_url = 'https://' . $host . app_url('reset_password.php') . '?token=' . urlencode($token);
 
     $subject = 'Reset Your Password - Mill Creek-AR Learning Center';
     $html = <<<HTML
@@ -116,17 +116,17 @@ function send_password_reset_email(string $email, string $first_name, string $to
         </div>
     </body>
     </html>
-    HTML;
+HTML;
 
     return send_mail($email, $subject, $html);
 }
 
 /**
  * Generic mail function using PHP's mail() or configured SMTP
- * Can be replaced with Mailer/PHPMailer for production
  */
-function send_mail(string $to, string $subject, string $html): bool {
-    $from = 'noreply@' . ($_SERVER['HTTP_HOST'] ?? 'millcreek-ar-learning.com');
+function send_mail($to, $subject, $html) {
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'millcreek-ar-learning.com';
+    $from = 'noreply@' . $host;
     $headers = "MIME-Version: 1.0\r\n"
         . "Content-type: text/html; charset=UTF-8\r\n"
         . "From: Mill Creek-AR Learning Center <$from>\r\n"

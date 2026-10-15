@@ -8,15 +8,18 @@ include 'includes/header.php';
 ?>
 <section class="page-hero"><div class="wrap"><span class="eyebrow">Step 1 of 2 · Choose a journey</span><h1>Support the learner. Protect the child.</h1><p class="lede">Choose a learning journey based on interests and goals. Profiles use privacy-safe labels—never full names, schools, family circumstances, or direct contact details.</p></div></section>
 <section class="section"><div class="wrap">
-<?php if ($loadError): ?><div class="alert error"><strong>The sponsorship portal needs its local database.</strong><span>Import <code>database.sql</code>, then refresh this page.</span></div>
-<?php else: ?><div class="zeffy-banner" style="background:#fff;border:2px solid var(--forest);border-radius:var(--radius);padding:26px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:38px;box-shadow:var(--shadow);flex-wrap:wrap">
+<div class="zeffy-banner" style="background:#fff;border:2px solid var(--forest);border-radius:var(--radius);padding:26px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:38px;box-shadow:var(--shadow);flex-wrap:wrap">
   <div>
     <span class="eyebrow" style="margin-bottom:6px">Direct Support · 100% Free for Nonprofits</span>
     <h3 style="margin:0;font-size:1.45rem">Make an immediate gift through our official Zeffy campaign</h3>
-    <p style="margin:6px 0 0;color:var(--muted);max-width:620px">No fees are deducted from your donation. Every dollar directly funds computers, internet connectivity, and programming instruction for our students in Accra.</p>
+    <p style="margin:6px 0 0;color:var(--muted);max-width:620px">No platform fees are deducted from your donation. Every dollar directly funds computers, internet connectivity, and programming instruction for our students in Accra.</p>
   </div>
   <a class="button button-gold" href="https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-through-it" target="_blank" rel="noopener">Give on Zeffy <span aria-hidden="true">↗</span></a>
 </div>
+
+<?php if ($loadError): ?>
+<div class="alert note" style="margin-bottom:24px"><strong>Individual student profile sponsorships will activate shortly.</strong><span>In the meantime, you can make an immediate tax-deductible contribution to the learning center using the official Zeffy campaign above.</span></div>
+<?php else: ?>
 <div class="journey-grid">
 <?php foreach($journeys as $index=>$journey): ?><article class="journey-card"><div class="journey-visual" aria-hidden="true"><span><?= htmlspecialchars(mb_strtoupper(mb_substr($journey['first_name'],0,1))) ?></span><small>Learning journey</small></div><div class="journey-body"><span class="journey-band"><?= htmlspecialchars($journey['age_band']) ?></span><h2><?= htmlspecialchars($journey['first_name']) ?></h2><p><?= htmlspecialchars($journey['profile_summary']) ?></p><dl><div><dt>Interested in</dt><dd><?= htmlspecialchars($journey['interest_area']) ?></dd></div><div><dt>Favorite subject</dt><dd><?= htmlspecialchars($journey['favorite_subject'] ?: 'Not yet added') ?></dd></div><div><dt>Strengths</dt><dd><?= htmlspecialchars($journey['strengths'] ?: 'Not yet added') ?></dd></div><div><dt>Current focus</dt><dd><?= htmlspecialchars($journey['current_focus']) ?></dd></div><div><dt>Looking ahead</dt><dd><?= htmlspecialchars($journey['aspirations'] ?: 'Not yet added') ?></dd></div></dl><a class="button" href="signup.php?journey=<?= urlencode($journey['public_code']) ?>">Sponsor <?= htmlspecialchars($journey['first_name']) ?>’s journey <span aria-hidden="true">→</span></a></div></article><?php endforeach; ?>
 </div><?php endif; ?>

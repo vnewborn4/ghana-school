@@ -1,8 +1,6 @@
 # Prioritize index.php over any default placeholder index.html
 DirectoryIndex index.php index.html
 
-AddHandler application/x-httpd-php82 .php
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
 

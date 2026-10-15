@@ -23,7 +23,7 @@ function nav_active(string $page, string $currentPage): string { return $page ==
     <div class="announcement">A learning initiative in Accra, Ghana, in conjunction with the AD2 Alumni Foundation</div>
     <div class="nav-wrap">
         <a class="brand" href="<?= app_url('index.php') ?>" aria-label="Mill Creek-AR Learning Center home">
-            <img class="brand-mark" src="<?= app_url('assets/images/brand-mark.svg') ?>" alt="" width="46" height="46">
+            <img class="brand-crest" src="<?= app_url('assets/images/mill-creek-crest.jpeg') ?>" alt="Mill Creek-AR Crest" width="46" height="46">
             <span><strong>Mill Creek-AR</strong><small>Learning Center · Accra</small></span>
         </a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><span class="sr-only">Open menu</span></button>

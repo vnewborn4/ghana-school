@@ -4,7 +4,15 @@ $stmt=db()->prepare('SELECT id,first_name,last_name,email,is_admin FROM users WH
 $stmt=db()->prepare('SELECT s.*,j.first_name,j.age_band,j.interest_area,j.current_focus,j.public_code FROM sponsorships s JOIN student_journeys j ON j.id=s.student_journey_id WHERE s.user_id=? ORDER BY s.created_at DESC'); $stmt->execute([$userId]); $sponsorships=$stmt->fetchAll();
 $pageTitle='My Sponsor Dashboard'; $pageDescription='View your sponsorship status and student learning updates.'; include 'includes/header.php';
 ?>
-<section class="dashboard-hero"><div class="wrap dashboard-head"><div><span class="eyebrow light">Sponsor dashboard</span><h1>Welcome, <?= htmlspecialchars($user['first_name']) ?>.</h1><p>Your giving status and learning updates are together in one simple place.</p></div><div class="button-row"><?php if((int)$user['is_admin']===1): ?><a class="button button-gold" href="admin.php">Student administration</a><?php endif; ?><form method="post" action="logout.php"><input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>"><button class="button button-light" type="submit">Sign out</button></form></div></div></section>
+<section class="dashboard-hero"><div class="wrap dashboard-head"><div><span class="eyebrow light">Sponsor dashboard</span><h1>Welcome, <?= htmlspecialchars($user['first_name']) ?>.</h1><p>Your giving status and learning updates are together in one simple place.</p></div><div class="button-row">
+<?php if (is_admin()): ?>
+    <a class="button button-gold" href="admin.php">Admin Suite</a>
+    <a class="button button-gold" href="profile_studio.php">Lab Studio ↗</a>
+<?php elseif (is_teacher()): ?>
+    <a class="button button-gold" href="profile_studio.php">Lab Studio ↗</a>
+<?php endif; ?>
+<form method="post" action="logout.php"><input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>"><button class="button button-light" type="submit">Sign out</button></form>
+</div></div></section>
 <section class="section cream"><div class="wrap">
 <?php if(!$sponsorships): ?><div class="empty-state"><span aria-hidden="true">↗</span><h2>No sponsorships yet</h2><p>Choose a privacy-safe student journey to begin.</p><a class="button" href="adopt.php">Choose a journey</a></div>
 <?php else: ?><div class="dashboard-layout"><aside class="dashboard-summary"><span class="eyebrow">Your giving</span><strong class="summary-number"><?= count($sponsorships) ?></strong><span><?= count($sponsorships)===1?'supported journey':'supported journeys' ?></span><p>Payment status changes only after confirmation from the secure payment provider.</p><a class="button button-outline" href="adopt.php">Support another journey</a></aside><div class="sponsorship-stack">

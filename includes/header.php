@@ -35,7 +35,17 @@ function nav_active($page, $currentPage) { return $page === $currentPage ? ' ari
             <a<?= nav_active('impact.php', $currentPage) ?> href="<?= app_url('impact.php') ?>">Why technology</a>
             <a<?= nav_active('bio.php', $currentPage) ?> href="<?= app_url('bio.php') ?>">Founder</a>
             <a<?= nav_active('foundation.php', $currentPage) ?> href="<?= app_url('foundation.php') ?>">Partnership</a>
-            <?php if(is_logged_in()): ?><a<?= nav_active('portal.php', $currentPage) ?> href="<?= app_url('portal.php') ?>">My dashboard</a><?php else: ?><a<?= nav_active('login.php', $currentPage) ?> href="<?= app_url('login.php') ?>">Sign in</a><?php endif; ?>
+            <?php if(is_logged_in()): ?>
+                <a<?= nav_active('portal.php', $currentPage) ?> href="<?= app_url('portal.php') ?>">Dashboard</a>
+                <?php if(is_admin()): ?>
+                    <a<?= nav_active('admin.php', $currentPage) ?> href="<?= app_url('admin.php') ?>">Admin</a>
+                <?php endif; ?>
+                <?php if(is_teacher()): ?>
+                    <a<?= nav_active('profile_studio.php', $currentPage) ?> href="<?= app_url('profile_studio.php') ?>">Lab Studio</a>
+                <?php endif; ?>
+            <?php else: ?>
+                <a<?= nav_active('login.php', $currentPage) ?> href="<?= app_url('login.php') ?>">Sign in</a>
+            <?php endif; ?>
             <a<?= nav_active('adopt.php', $currentPage) ?> href="<?= app_url('adopt.php') ?>">Sponsor a journey</a>
         </nav>
     </div>

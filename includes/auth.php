@@ -51,5 +51,38 @@ function require_admin() {
 }
 function safe_return_path($fallback='portal.php') { 
     $path = isset($_POST['return']) ? $_POST['return'] : (isset($_GET['return']) ? $_GET['return'] : ''); 
-    return in_array($path, array('portal.php','adopt.php'), true) ? $path : $fallback; 
+    return in_array($path, array('portal.php','adopt.php','admin.php','profile_studio.php'), true) ? $path : $fallback; 
+}
+
+function current_user() {
+    static $user = null;
+    if ($user !== null) return $user;
+    if (!is_logged_in()) return null;
+    require_once __DIR__.'/db.php';
+    $stmt = db()->prepare('SELECT id, first_name, last_name, email, is_admin, is_teacher FROM users WHERE id=?');
+    $stmt->execute(array((int)$_SESSION['user_id']));
+    $row = $stmt->fetch();
+    $user = $row ? $row : null;
+    return $user;
+}
+
+function is_admin() {
+    $u = current_user();
+    return $u && (int)$u['is_admin'] === 1;
+}
+
+function is_teacher() {
+    $u = current_user();
+    if (!$u) return false;
+    $teacher = isset($u['is_teacher']) ? (int)$u['is_teacher'] : 0;
+    return ((int)$u['is_admin'] === 1 || $teacher === 1);
+}
+
+function require_teacher() {
+    $id = require_user();
+    if (!is_teacher()) {
+        http_response_code(403);
+        exit('Teacher or administrator access is required.');
+    }
+    return $id;
 }

@@ -4,11 +4,11 @@
 // Fixed Stripe/PayPal links are looked up by provider, frequency, and amount.
 function payment_link(string $provider, string $frequency, float $amount): ?string {
     if ($provider === 'zeffy') {
-        $url = getenv('ZEFFY_DONATION_FORM_URL');
+        $url = getenv('ZEFFY_DONATION_FORM_URL') ?: 'https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-through-it';
         if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) return null;
         $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
         $host = strtolower((string) parse_url($url, PHP_URL_HOST));
-        $isZeffyHost = $host === 'zeffy.com' || str_ends_with($host, '.zeffy.com');
+        $isZeffyHost = $host === 'zeffy.com' || substr($host, -10) === '.zeffy.com';
         return $scheme === 'https' && $isZeffyHost ? $url : null;
     }
     if (floor($amount) !== $amount) return null;

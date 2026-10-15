@@ -1,11 +1,13 @@
 <?php
-require_once 'includes/auth.php'; require_once 'includes/db.php'; require_once 'includes/payment_config.php';
+require_once 'includes/auth.php'; require_once 'includes/db.php'; require_once 'includes/payment_config.php'; require_once 'includes/security.php'; require_once 'includes/mail.php';
 $code=(string)($_POST['journey'] ?? $_GET['journey'] ?? '');
 $stmt=db()->prepare("SELECT * FROM student_journeys WHERE public_code=? AND active=1"); $stmt->execute([$code]); $journey=$stmt->fetch();
 if(!$journey){ header('Location: adopt.php'); exit; }
 $errors=[];
 if($_SERVER['REQUEST_METHOD']==='POST'){
   verify_csrf();
+  $ip=$_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+  if(!rate_limit('signup',$ip,5,300)){ $errors[]='Too many signup attempts. Please wait 5 minutes and try again.'; }
   $amount=filter_var($_POST['amount'] ?? null,FILTER_VALIDATE_FLOAT); $frequency=$_POST['frequency'] ?? ''; $provider=$_POST['payment_method'] ?? '';
   if($amount===false || $amount<5 || $amount>100000)$errors[]='Enter a contribution amount of at least $5.';
   if(!in_array($frequency,['monthly','one-time'],true))$errors[]='Choose a contribution frequency.';
@@ -23,7 +25,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   if(!$errors){
     $pdo=db(); $pdo->beginTransaction();
     try{
-      if(!$userId){ $insert=$pdo->prepare('INSERT INTO users(first_name,last_name,email,password_hash) VALUES(?,?,?,?)'); $insert->execute([$first,$last,$email,password_hash($password,PASSWORD_DEFAULT)]); $userId=(int)$pdo->lastInsertId(); }
+      if(!$userId){ $insert=$pdo->prepare('INSERT INTO users(first_name,last_name,email,password_hash,email_verified) VALUES(?,?,?,?,0)'); $insert->execute([$first,$last,$email,password_hash($password,PASSWORD_DEFAULT)]); $userId=(int)$pdo->lastInsertId(); $token=generate_email_token($email); $ins=$pdo->prepare('INSERT INTO email_verifications(user_id,token) VALUES(?,?)'); $ins->execute([$userId,$token]); send_verification_email($email,$first,$token); }
       $insert=$pdo->prepare('INSERT INTO sponsorships(user_id,student_journey_id,amount,frequency,payment_provider,status) VALUES(?,?,?,?,?,\'pending\')');
       $insert->execute([$userId,$journey['id'],$amount,$frequency,$provider]); $sponsorshipId=(int)$pdo->lastInsertId(); $pdo->commit(); login_user($userId);
       $link=payment_link($provider,$frequency,(float)$amount); if($link){ header('Location: '.$link,true,303); exit; }

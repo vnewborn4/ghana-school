@@ -1,0 +1,43 @@
+name: Deploy to web server
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: FTP sync site files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Sync files to server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftps15.us.cloudlogin.co
+          # Use Ghana account credentials: ftp_millcreek-ar-learning.com
+          username: ftp_millcreek-ar-learning.com
+          password: ${{ secrets.FTP_PASSWORD_GHANA }}
+          # Use explicit FTPS on standard port 21 with STARTTLS
+          protocol: ftps
+          port: 21
+          # Remote directory to deploy into. For Ghana, uses /www/millcreek-ar-learning.com/
+          # For global account, override via FTP_SERVER_DIR variable. Path must end with a slash.
+          server-dir: ${{ vars.FTP_SERVER_DIR || '/www/millcreek-ar-learning.com/' }}
+          # Development-only files that must never reach the live server.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            .claude/**
+            .mcp.json
+            SETUP.md
+            database.sql
+            migrations/**

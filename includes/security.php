@@ -13,15 +13,19 @@ if (!empty($_SERVER['HTTP_HOST']) && empty($_SERVER['HTTPS']) && getenv('ENFORCE
  * Rate limiting: track attempts by IP and action
  * Usage: rate_limit('login', $_SERVER['REMOTE_ADDR'], 5, 300) — max 5 per 5 minutes
  */
-function rate_limit(string $action, string $identifier, int $max_attempts, int $window_seconds): bool {
+function rate_limit($action, $identifier, $max_attempts, $window_seconds) {
     $file = sys_get_temp_dir() . '/ratelimit_' . hash('sha256', $action . $identifier) . '.json';
 
     if (file_exists($file)) {
-        $data = json_decode(file_get_contents($file), true) ?? [];
+        $raw = file_get_contents($file);
+        $decoded = json_decode($raw, true);
+        $data = is_array($decoded) ? $decoded : array();
         $now = time();
 
         // Clean old attempts
-        $data = array_filter($data, fn($t) => $now - $t < $window_seconds);
+        $data = array_filter($data, function($t) use ($now, $window_seconds) {
+            return ($now - $t) < $window_seconds;
+        });
 
         if (count($data) >= $max_attempts) {
             return false; // Rate limited
@@ -29,7 +33,7 @@ function rate_limit(string $action, string $identifier, int $max_attempts, int $
 
         $data[] = $now;
     } else {
-        $data = [time()];
+        $data = array(time());
     }
 
     file_put_contents($file, json_encode($data), LOCK_EX);
@@ -39,22 +43,19 @@ function rate_limit(string $action, string $identifier, int $max_attempts, int $
 /**
  * Email verification token generation
  */
-function generate_email_token(string $email): string {
-    return bin2hex(random_bytes(32));
+function generate_email_token($email) {
+    if (function_exists('random_bytes')) {
+        return bin2hex(random_bytes(32));
+    } elseif (function_exists('openssl_random_pseudo_bytes')) {
+        return bin2hex(openssl_random_pseudo_bytes(32));
+    }
+    return md5(uniqid(mt_rand(), true));
 }
 
 /**
  * Verify email token (check token and expiry — max 24 hours)
- * Table schema expected: CREATE TABLE email_verifications (
- *   id INT PRIMARY KEY AUTO_INCREMENT,
- *   user_id INT NOT NULL,
- *   token VARCHAR(64) NOT NULL UNIQUE,
- *   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
- *   verified_at TIMESTAMP NULL,
- *   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
- * );
  */
-function verify_email_token(string $token): ?int {
+function verify_email_token($token) {
     require_once __DIR__ . '/db.php';
     $stmt = db()->prepare(
         'SELECT user_id FROM email_verifications
@@ -62,7 +63,7 @@ function verify_email_token(string $token): ?int {
          AND created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)
          LIMIT 1'
     );
-    $stmt->execute([$token]);
+    $stmt->execute(array($token));
     $result = $stmt->fetchColumn();
 
     if ($result) {
@@ -70,7 +71,7 @@ function verify_email_token(string $token): ?int {
         $update = db()->prepare(
             'UPDATE email_verifications SET verified_at = NOW() WHERE token = ?'
         );
-        $update->execute([$token]);
+        $update->execute(array($token));
     }
 
     return $result ? (int)$result : null;
@@ -79,21 +80,20 @@ function verify_email_token(string $token): ?int {
 /**
  * Check if user's email is verified
  */
-function is_email_verified(int $user_id): bool {
+function is_email_verified($user_id) {
     require_once __DIR__ . '/db.php';
     $stmt = db()->prepare(
         'SELECT 1 FROM email_verifications
          WHERE user_id = ? AND verified_at IS NOT NULL LIMIT 1'
     );
-    $stmt->execute([$user_id]);
+    $stmt->execute(array($user_id));
     return (bool)$stmt->fetchColumn();
 }
 
 /**
  * Webhook signature verification (generic HMAC-SHA256)
- * Usage: verify_webhook_signature($_POST, 'your-webhook-secret', $_SERVER['HTTP_X_SIGNATURE'] ?? '')
  */
-function verify_webhook_signature(array $payload, string $secret, string $signature): bool {
+function verify_webhook_signature($payload, $secret, $signature) {
     $body = json_encode($payload);
     $expected = 'sha256=' . hash_hmac('sha256', $body, $secret);
     return hash_equals($expected, $signature);
@@ -102,7 +102,7 @@ function verify_webhook_signature(array $payload, string $secret, string $signat
 /**
  * Add security headers
  */
-function add_security_headers(): void {
+function add_security_headers() {
     if (!headers_sent()) {
         header('X-Content-Type-Options: nosniff');
         header('X-Frame-Options: SAMEORIGIN');

@@ -1,5 +1,5 @@
 <?php
-function db(): PDO {
+function db() {
     static $pdo = null;
     if ($pdo instanceof PDO) return $pdo;
     $host = getenv('GHANA_DB_HOST') ?: '127.0.0.1';

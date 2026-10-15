@@ -2,7 +2,7 @@
 // Configure hosted checkout URLs in Apache/PHP environment variables. Never place secret keys here.
 // Zeffy uses one Donation Campaign URL; donors confirm the amount and frequency on Zeffy's form.
 // Fixed Stripe/PayPal links are looked up by provider, frequency, and amount.
-function payment_link(string $provider, string $frequency, float $amount): ?string {
+function payment_link($provider, $frequency, $amount) {
     if ($provider === 'zeffy') {
         $url = getenv('ZEFFY_DONATION_FORM_URL') ?: 'https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-through-it';
         if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) return null;

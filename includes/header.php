@@ -2,10 +2,10 @@
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/security.php';
 add_security_headers();
-$pageTitle = $pageTitle ?? 'Mill Creek-AR Learning Center';
-$pageDescription = $pageDescription ?? 'Technology education and mentorship for young people in Accra, Ghana.';
-$currentPage = basename($_SERVER['PHP_SELF'] ?? 'index.php');
-function nav_active(string $page, string $currentPage): string { return $page === $currentPage ? ' aria-current="page" class="nav-link active"' : ' class="nav-link"'; }
+$pageTitle = isset($pageTitle) ? $pageTitle : 'Mill Creek-AR Learning Center';
+$pageDescription = isset($pageDescription) ? $pageDescription : 'Technology education and mentorship for young people in Accra, Ghana.';
+$currentPage = basename(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : 'index.php');
+function nav_active($page, $currentPage) { return $page === $currentPage ? ' aria-current="page" class="nav-link active"' : ' class="nav-link"'; }
 ?>
 <!doctype html>
 <html lang="en">

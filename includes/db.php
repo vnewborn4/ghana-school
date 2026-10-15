@@ -2,9 +2,29 @@
 function db() {
     static $pdo = null;
     if ($pdo instanceof PDO) return $pdo;
-    $host = getenv('GHANA_DB_HOST') ?: '127.0.0.1';
-    $name = getenv('GHANA_DB_NAME') ?: 'ghana_school';
-    $user = getenv('GHANA_DB_USER') ?: 'root';
+    $envFile = dirname(__DIR__) . '/.env';
+    if (file_exists($envFile)) {
+        $lines = @file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if (is_array($lines)) {
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if ($line === '' || $line[0] === '#') continue;
+                if (strpos($line, '=') !== false) {
+                    list($k, $v) = explode('=', $line, 2);
+                    $k = trim($k);
+                    $v = trim($v, " \t\n\r\0\x0B\"'");
+                    if (getenv($k) === false) {
+                        putenv("{$k}={$v}");
+                        $_ENV[$k] = $v;
+                    }
+                }
+            }
+        }
+    }
+
+    $host = getenv('GHANA_DB_HOST') ?: 'mysql.us.cloudlogin.co';
+    $name = getenv('GHANA_DB_NAME') ?: 'bigdog95_millcreek';
+    $user = getenv('GHANA_DB_USER') ?: 'bigdog95_millcreek';
     $password = getenv('GHANA_DB_PASSWORD') ?: '';
     $pdo = new PDO("mysql:host={$host};dbname={$name};charset=utf8mb4", $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

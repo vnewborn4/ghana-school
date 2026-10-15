@@ -18,6 +18,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Generate production .env
+        run: |
+          cat << EOF > .env
+          GHANA_DB_HOST=${{ secrets.GHANA_DB_HOST }}
+          GHANA_DB_NAME=${{ secrets.GHANA_DB_NAME }}
+          GHANA_DB_USER=${{ secrets.GHANA_DB_USER }}
+          GHANA_DB_PASSWORD=${{ secrets.GHANA_DB_PASSWORD }}
+          ZEFFY_DONATION_FORM_URL=https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-through-it
+          EOF
+
       - name: Sync files to server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:

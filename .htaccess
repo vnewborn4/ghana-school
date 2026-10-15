@@ -1,11 +1,14 @@
+# Prioritize index.php over any default placeholder index.html
+DirectoryIndex index.php index.html
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Enforce HTTPS in production environments (skip localhost and local IP addresses for testing)
-    RewriteCond %{HTTPS} off
-    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
-    RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # Note: Enable HTTPS redirect only after an SSL certificate is active on the server
+    # RewriteCond %{HTTPS} off
+    # RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    # RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
 <IfModule mod_headers.c>

@@ -28,9 +28,8 @@ jobs:
           # Use explicit FTPS on standard port 21 with STARTTLS
           protocol: ftps
           port: 21
-          # Remote directory to deploy into. For Ghana, uses /www/millcreek-ar-learning.com/
-          # For global account, override via FTP_SERVER_DIR variable. Path must end with a slash.
-          server-dir: ${{ vars.FTP_SERVER_DIR || '/www/millcreek-ar-learning.com/' }}
+          # Remote directory to deploy into. Default to root directory './'
+          server-dir: ${{ vars.FTP_SERVER_DIR || './' }}
           # Development-only files that must never reach the live server.
           exclude: |
             **/.git*

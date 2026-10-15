@@ -3,15 +3,10 @@
  * Security utilities: HTTPS enforcement, rate limiting, email verification
  */
 
-// Enforce HTTPS in production (only on actual domains, not during setup)
-if (!empty($_SERVER['HTTP_HOST']) && empty($_SERVER['HTTPS'])) {
-    // Only redirect if explicitly in production mode or on known domain
-    $is_production = getenv('APP_ENV') === 'production';
-    $is_live_domain = strpos($_SERVER['HTTP_HOST'], 'millcreek') !== false || strpos($_SERVER['HTTP_HOST'], 'ghana-school') !== false;
-    if ($is_production || $is_live_domain) {
-        header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 301);
-        exit;
-    }
+// Enforce HTTPS only when explicitly enabled and SSL certificate is verified
+if (!empty($_SERVER['HTTP_HOST']) && empty($_SERVER['HTTPS']) && getenv('ENFORCE_HTTPS') === 'true') {
+    header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 301);
+    exit;
 }
 
 /**

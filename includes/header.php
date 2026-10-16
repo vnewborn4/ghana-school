@@ -4,7 +4,7 @@ require_once __DIR__ . '/security.php';
 add_security_headers();
 $pageTitle = isset($pageTitle) ? $pageTitle : 'Mill Creek-AR Learning Center';
 $pageDescription = isset($pageDescription) ? $pageDescription : 'Technology education and mentorship for young people in Accra, Ghana.';
-$pageImage = isset($pageImage) ? $pageImage : app_url('assets/images/mill-creek-crest.jpeg');
+$pageImage = isset($pageImage) ? (strpos($pageImage, 'http') === 0 ? $pageImage : app_url($pageImage)) : app_url('assets/images/mill-creek-crest.jpeg');
 $currentPage = basename(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : 'index.php');
 function nav_active($page, $currentPage) { return $page === $currentPage ? ' aria-current="page" class="nav-link active"' : ' class="nav-link"'; }
 ?>

@@ -1,7 +1,7 @@
 <?php
 $pageTitle = 'Van Newborn — Founder';
 $pageDescription = 'Meet Van Newborn, the engineer whose journey from Mill Creek, Arkansas inspired a technology learning center in Accra.';
-$pageImage = app_url('assets/images/van-newborn-square.jpeg');
+$pageImage = 'assets/images/van-newborn-square.jpeg';
 include 'includes/header.php';
 ?>
 <section class="page-hero"><div class="wrap"><span class="eyebrow">Meet the founder</span><h1>Van Newborn</h1><p class="lede">Engineering a bridge for the next generation—from a life shaped in Mill Creek, Arkansas to a commitment carried forward in Accra.</p></div></section>

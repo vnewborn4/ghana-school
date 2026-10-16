@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     is_admin TINYINT(1) NOT NULL DEFAULT 0,
+    is_teacher TINYINT(1) NOT NULL DEFAULT 0,
+    email_verified TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -16,6 +18,7 @@ CREATE TABLE IF NOT EXISTS student_journeys (
     public_code VARCHAR(40) NOT NULL UNIQUE,
     first_name VARCHAR(60) NOT NULL,
     display_name VARCHAR(100) NOT NULL,
+    image_url VARCHAR(255) NULL,
     age_band VARCHAR(40) NOT NULL,
     interest_area VARCHAR(120) NOT NULL,
     current_focus VARCHAR(160) NOT NULL,
@@ -24,6 +27,7 @@ CREATE TABLE IF NOT EXISTS student_journeys (
     strengths VARCHAR(180) NOT NULL DEFAULT '',
     aspirations VARCHAR(180) NOT NULL DEFAULT '',
     active TINYINT(1) NOT NULL DEFAULT 1,
+    access_pin VARCHAR(20) NOT NULL DEFAULT '2026',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 

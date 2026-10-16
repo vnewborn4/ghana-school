@@ -33,3 +33,6 @@ h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.08;margin-top
 .lab-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--sage);color:var(--forest);font-size:.78rem;font-weight:800;border-radius:99px;letter-spacing:.04em}
 @media(max-width:900px){.gallery-grid{grid-template-columns:1fr 1fr}.video-meta{flex-direction:column;align-items:flex-start}}
 @media(max-width:600px){.gallery-grid{grid-template-columns:1fr}.gallery-item img{height:230px}}
+.journey-visual img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.journey-card:hover .journey-visual img{transform:scale(1.04)}
+.admin-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}

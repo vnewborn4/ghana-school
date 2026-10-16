@@ -21,7 +21,31 @@ include 'includes/header.php';
 <div class="alert note" style="margin-bottom:24px"><strong>Individual student profile sponsorships will activate shortly.</strong><span>In the meantime, you can make an immediate tax-deductible contribution to the learning center using the official Zeffy campaign above.</span></div>
 <?php else: ?>
 <div class="journey-grid">
-<?php foreach($journeys as $index=>$journey): ?><article class="journey-card"><div class="journey-visual" aria-hidden="true"><span><?= htmlspecialchars(mb_strtoupper(mb_substr($journey['first_name'],0,1))) ?></span><small>Learning journey</small></div><div class="journey-body"><span class="journey-band"><?= htmlspecialchars($journey['age_band']) ?></span><h2><?= htmlspecialchars($journey['first_name']) ?></h2><p><?= htmlspecialchars($journey['profile_summary']) ?></p><dl><div><dt>Interested in</dt><dd><?= htmlspecialchars($journey['interest_area']) ?></dd></div><div><dt>Favorite subject</dt><dd><?= htmlspecialchars($journey['favorite_subject'] ?: 'Not yet added') ?></dd></div><div><dt>Strengths</dt><dd><?= htmlspecialchars($journey['strengths'] ?: 'Not yet added') ?></dd></div><div><dt>Current focus</dt><dd><?= htmlspecialchars($journey['current_focus']) ?></dd></div><div><dt>Looking ahead</dt><dd><?= htmlspecialchars($journey['aspirations'] ?: 'Not yet added') ?></dd></div></dl><a class="button" href="signup.php?journey=<?= urlencode($journey['public_code']) ?>">Sponsor <?= htmlspecialchars($journey['first_name']) ?>’s journey <span aria-hidden="true">→</span></a></div></article><?php endforeach; ?>
+<?php foreach($journeys as $index=>$journey): ?>
+    <article class="journey-card">
+        <div class="journey-visual" aria-hidden="true">
+            <?php if (!empty($journey['image_url'])): ?>
+                <img src="<?= htmlspecialchars(app_url($journey['image_url'])) ?>" alt="<?= htmlspecialchars($journey['first_name']) ?>" loading="lazy">
+            <?php else: ?>
+                <span><?= htmlspecialchars(mb_strtoupper(mb_substr($journey['first_name'],0,1))) ?></span>
+                <small>Learning journey</small>
+            <?php endif; ?>
+        </div>
+        <div class="journey-body">
+            <span class="journey-band"><?= htmlspecialchars($journey['age_band']) ?></span>
+            <h2><?= htmlspecialchars($journey['first_name']) ?></h2>
+            <p><?= htmlspecialchars($journey['profile_summary']) ?></p>
+            <dl>
+                <div><dt>Interested in</dt><dd><?= htmlspecialchars($journey['interest_area']) ?></dd></div>
+                <div><dt>Favorite subject</dt><dd><?= htmlspecialchars($journey['favorite_subject'] ?: 'Not yet added') ?></dd></div>
+                <div><dt>Strengths</dt><dd><?= htmlspecialchars($journey['strengths'] ?: 'Not yet added') ?></dd></div>
+                <div><dt>Current focus</dt><dd><?= htmlspecialchars($journey['current_focus']) ?></dd></div>
+                <div><dt>Looking ahead</dt><dd><?= htmlspecialchars($journey['aspirations'] ?: 'Not yet added') ?></dd></div>
+            </dl>
+            <a class="button" href="signup.php?journey=<?= urlencode($journey['public_code']) ?>">Sponsor <?= htmlspecialchars($journey['first_name']) ?>’s journey <span aria-hidden="true">→</span></a>
+        </div>
+    </article>
+<?php endforeach; ?>
 </div><?php endif; ?>
 <div class="privacy-note"><strong>Safeguarding by design:</strong> A sponsorship creates an educational connection, not private access to a child. Updates are reviewed, non-identifying, and shared through the donor dashboard.</div>
 </div></section>

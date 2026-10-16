@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $subject = clean_field('favorite_subject', 120);
         $strengths = clean_field('strengths', 180);
         $aspirations = clean_field('aspirations', 180);
+        $image = clean_field('image_url', 255);
         $pin = clean_field('access_pin', 20);
         if ($pin === '') $pin = '2026';
 
@@ -54,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $slug = trim($cleanAscii, '-');
             $code = $slug . '-' . substr(md5(uniqid(mt_rand(), true)), 0, 6);
 
-            $stmt = db()->prepare('INSERT INTO student_journeys(public_code,first_name,display_name,age_band,interest_area,current_focus,profile_summary,favorite_subject,strengths,aspirations,access_pin,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,1)');
-            $stmt->execute(array($code, $first, $first, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $pin));
+            $stmt = db()->prepare('INSERT INTO student_journeys(public_code,first_name,display_name,image_url,age_band,interest_area,current_focus,profile_summary,favorite_subject,strengths,aspirations,access_pin,active) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,1)');
+            $stmt->execute(array($code, $first, $first, $image ? $image : null, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $pin));
             $success = $first . ' has been added and is now available for sponsorship.';
         }
 
@@ -70,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $subject = clean_field('favorite_subject', 120);
         $strengths = clean_field('strengths', 180);
         $aspirations = clean_field('aspirations', 180);
+        $image = clean_field('image_url', 255);
         $pin = clean_field('access_pin', 20);
         if ($pin === '') $pin = '2026';
 
@@ -80,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($interest === '') $errors[] = 'Add the interest area.';
 
         if (empty($errors)) {
-            $stmt = db()->prepare('UPDATE student_journeys SET first_name=?, display_name=?, age_band=?, interest_area=?, current_focus=?, profile_summary=?, favorite_subject=?, strengths=?, aspirations=?, access_pin=? WHERE id=?');
-            $stmt->execute(array($first, $first, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $pin, $studentId));
+            $stmt = db()->prepare('UPDATE student_journeys SET first_name=?, display_name=?, image_url=?, age_band=?, interest_area=?, current_focus=?, profile_summary=?, favorite_subject=?, strengths=?, aspirations=?, access_pin=? WHERE id=?');
+            $stmt->execute(array($first, $first, $image ? $image : null, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $pin, $studentId));
             $success = 'Profile for ' . $first . ' has been updated successfully!';
             $editingStudent = null;
         }
@@ -144,8 +146,20 @@ $sponsorships = db()->query('SELECT s.*, u.first_name as donor_first, u.last_nam
 // System stats
 $totalStudents = count($students);
 $activeSponsors = (int)db()->query("SELECT COUNT(*) FROM sponsorships WHERE status='active'")->fetchColumn();
-$totalUpdates = (int)db()->query("SELECT COUNT(*) FROM student_updates")->fetchColumn();
 $totalUsers = (int)db()->query("SELECT COUNT(*) FROM users")->fetchColumn();
+
+$studentPhotoOptions = array(
+    '' => 'No photo (monogram initial)',
+    'assets/images/student-1.jpeg' => 'Student Portrait 1 (student-1.jpeg)',
+    'assets/images/student-2.jpeg' => 'Student Portrait 2 (student-2.jpeg)',
+    'assets/images/student-3.jpeg' => 'Student Portrait 3 (student-3.jpeg)',
+    'assets/images/classroom-coding-close.jpeg' => 'Hands-on Coding Close-up',
+    'assets/images/classroom-standing-lesson.jpeg' => 'Classroom Standing Lesson',
+    'assets/images/classroom-workstations-group.jpeg' => 'Workstation Cohort',
+    'assets/images/classroom-group-portrait.jpeg' => 'Group Portrait',
+    'assets/images/classroom-evening-lab.jpeg' => 'Evening Lab Session',
+    'assets/images/python-vscode-laptop.jpeg' => 'Python Laptop Workstation'
+);
 
 $pageTitle = 'Administrator Suite';
 $pageDescription = 'Central administration for Mill Creek-AR Learning Center student profiles, instructors, and sponsorships.';
@@ -277,6 +291,15 @@ include 'includes/header.php';
                             Aspirations
                             <input name="aspirations" maxlength="180" value="<?= htmlspecialchars($editingStudent['aspirations']) ?>">
                         </label>
+                        <label class="wide">
+                            Classroom Photo
+                            <select name="image_url" class="select-input">
+                                <?php foreach ($studentPhotoOptions as $path => $label): ?>
+                                    <option value="<?= $path ?>" <?= ($editingStudent['image_url'] === $path) ? 'selected' : '' ?>><?= $label ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small>Select an approved photo from the Accra lab</small>
+                        </label>
                         <label>
                             Classroom Access PIN
                             <input name="access_pin" maxlength="20" value="<?= htmlspecialchars(!empty($editingStudent['access_pin']) ? $editingStudent['access_pin'] : '2026') ?>">
@@ -338,6 +361,15 @@ include 'includes/header.php';
                             Aspirations
                             <input name="aspirations" maxlength="180" placeholder="Create a useful community technology project">
                         </label>
+                        <label class="wide">
+                            Classroom Photo
+                            <select name="image_url" class="select-input">
+                                <?php foreach ($studentPhotoOptions as $path => $label): ?>
+                                    <option value="<?= $path ?>"><?= $label ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small>Assign an approved classroom photo</small>
+                        </label>
                         <label>
                             Classroom Login PIN
                             <input name="access_pin" maxlength="20" value="2026" placeholder="2026">
@@ -394,7 +426,13 @@ include 'includes/header.php';
             <div class="admin-students">
                 <?php foreach ($students as $student): ?>
                     <article style="border: 1px solid var(--line);box-shadow:var(--shadow)">
-                        <div class="admin-avatar" aria-hidden="true"><?= htmlspecialchars(mb_strtoupper(mb_substr($student['first_name'], 0, 1))) ?></div>
+                        <div class="admin-avatar" aria-hidden="true">
+                            <?php if (!empty($student['image_url'])): ?>
+                                <img src="<?= htmlspecialchars(app_url($student['image_url'])) ?>" alt="<?= htmlspecialchars($student['first_name']) ?>">
+                            <?php else: ?>
+                                <?= htmlspecialchars(mb_strtoupper(mb_substr($student['first_name'], 0, 1))) ?>
+                            <?php endif; ?>
+                        </div>
                         <div>
                             <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
                                 <span class="journey-band"><?= htmlspecialchars($student['age_band']) ?></span>

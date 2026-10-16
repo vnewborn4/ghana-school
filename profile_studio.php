@@ -78,6 +78,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             $subject = studio_clean('favorite_subject', 120);
             $strengths = studio_clean('strengths', 180);
             $aspirations = studio_clean('aspirations', 180);
+            $image = studio_clean('image_url', 255);
             $pin = studio_clean('access_pin', 20);
             if ($pin === '') $pin = '2026';
 
@@ -98,8 +99,8 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
                 $slug = trim($cleanAscii, '-');
                 $code = $slug . '-' . substr(md5(uniqid(mt_rand(), true)), 0, 6);
 
-                $stmt = db()->prepare('INSERT INTO student_journeys (public_code, first_name, display_name, age_band, interest_area, current_focus, profile_summary, favorite_subject, strengths, aspirations, access_pin, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)');
-                $stmt->execute(array($code, $first, $first, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $pin));
+                $stmt = db()->prepare('INSERT INTO student_journeys (public_code, first_name, display_name, image_url, age_band, interest_area, current_focus, profile_summary, favorite_subject, strengths, aspirations, access_pin, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)');
+                $stmt->execute(array($code, $first, $first, $image ? $image : null, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $pin));
                 $newId = (int)db()->lastInsertId();
 
                 $success = 'Student profile for ' . htmlspecialchars($first) . ' created successfully! It is now live on the sponsorship portal.';
@@ -126,6 +127,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             $subject = studio_clean('favorite_subject', 120);
             $strengths = studio_clean('strengths', 180);
             $aspirations = studio_clean('aspirations', 180);
+            $image = studio_clean('image_url', 255);
             $pin = studio_clean('access_pin', 20);
 
             if (!preg_match("/^\p{L}[\p{L}\p{M}'-]{0,59}$/u", $first)) {
@@ -136,11 +138,11 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
             if (empty($errors)) {
                 if ($pin !== '') {
-                    $stmt = db()->prepare('UPDATE student_journeys SET first_name=?, display_name=?, age_band=?, interest_area=?, current_focus=?, profile_summary=?, favorite_subject=?, strengths=?, aspirations=?, access_pin=? WHERE id=?');
-                    $stmt->execute(array($first, $first, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $pin, $targetId));
+                    $stmt = db()->prepare('UPDATE student_journeys SET first_name=?, display_name=?, image_url=?, age_band=?, interest_area=?, current_focus=?, profile_summary=?, favorite_subject=?, strengths=?, aspirations=?, access_pin=? WHERE id=?');
+                    $stmt->execute(array($first, $first, $image ? $image : null, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $pin, $targetId));
                 } else {
-                    $stmt = db()->prepare('UPDATE student_journeys SET first_name=?, display_name=?, age_band=?, interest_area=?, current_focus=?, profile_summary=?, favorite_subject=?, strengths=?, aspirations=? WHERE id=?');
-                    $stmt->execute(array($first, $first, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $targetId));
+                    $stmt = db()->prepare('UPDATE student_journeys SET first_name=?, display_name=?, image_url=?, age_band=?, interest_area=?, current_focus=?, profile_summary=?, favorite_subject=?, strengths=?, aspirations=? WHERE id=?');
+                    $stmt->execute(array($first, $first, $image ? $image : null, $age, $interest, $focus, $bio, $subject, $strengths, $aspirations, $targetId));
                 }
                 $success = 'Profile for ' . htmlspecialchars($first) . ' has been updated successfully!';
                 $currentStudentId = $targetId;
@@ -195,6 +197,19 @@ if ($studentData) {
     $stmt->execute(array((int)$studentData['id']));
     $studentUpdates = $stmt->fetchAll();
 }
+
+$studentPhotoOptions = array(
+    '' => 'No photo (monogram initial)',
+    'assets/images/student-1.jpeg' => 'Student Portrait 1 (student-1.jpeg)',
+    'assets/images/student-2.jpeg' => 'Student Portrait 2 (student-2.jpeg)',
+    'assets/images/student-3.jpeg' => 'Student Portrait 3 (student-3.jpeg)',
+    'assets/images/classroom-coding-close.jpeg' => 'Hands-on Coding Close-up',
+    'assets/images/classroom-standing-lesson.jpeg' => 'Classroom Standing Lesson',
+    'assets/images/classroom-workstations-group.jpeg' => 'Workstation Cohort',
+    'assets/images/classroom-group-portrait.jpeg' => 'Group Portrait',
+    'assets/images/classroom-evening-lab.jpeg' => 'Evening Lab Session',
+    'assets/images/python-vscode-laptop.jpeg' => 'Python Laptop Workstation'
+);
 
 $pageTitle = 'Lab & Student Profile Studio';
 $pageDescription = 'Classroom portal for Accra students and instructors to build profiles and post learning milestones.';
@@ -391,6 +406,16 @@ include 'includes/header.php';
                                     <small>Positive, strengths-based summary of personality and curiosity.</small>
                                 </label>
 
+                                <label class="wide">
+                                    Classroom Photo
+                                    <select name="image_url" class="select-input">
+                                        <?php foreach ($studentPhotoOptions as $path => $label): ?>
+                                            <option value="<?= $path ?>" <?= (isset($studentData['image_url']) && $studentData['image_url'] === $path) ? 'selected' : '' ?>><?= $label ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <small>Select from approved lab workstation portraits</small>
+                                </label>
+
                                 <label>
                                     Classroom Access PIN
                                     <input type="text" name="access_pin" maxlength="20" value="<?= htmlspecialchars(!empty($studentData['access_pin']) ? $studentData['access_pin'] : '2026') ?>" placeholder="Default: 2026">
@@ -410,8 +435,12 @@ include 'includes/header.php';
 
                             <article class="journey-card" style="box-shadow:var(--shadow)">
                                 <div class="journey-visual" aria-hidden="true">
-                                    <span><?= htmlspecialchars(mb_strtoupper(mb_substr($studentData['first_name'], 0, 1))) ?></span>
-                                    <small>Learning journey</small>
+                                    <?php if (!empty($studentData['image_url'])): ?>
+                                        <img src="<?= htmlspecialchars(app_url($studentData['image_url'])) ?>" alt="<?= htmlspecialchars($studentData['first_name']) ?>" loading="lazy">
+                                    <?php else: ?>
+                                        <span><?= htmlspecialchars(mb_strtoupper(mb_substr($studentData['first_name'], 0, 1))) ?></span>
+                                        <small>Learning journey</small>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="journey-body">
                                     <span class="journey-band"><?= htmlspecialchars($studentData['age_band']) ?></span>
@@ -558,6 +587,16 @@ include 'includes/header.php';
                                 Dignity-Centered Biography Summary
                                 <textarea name="profile_summary" rows="5" maxlength="1200" required placeholder="A curious, determined learner in Accra who comes to the lab with enthusiasm to master computer fundamentals..."></textarea>
                                 <small>Focus on enthusiasm, curiosity, and potential.</small>
+                            </label>
+
+                            <label class="wide">
+                                Classroom Photo
+                                <select name="image_url" class="select-input">
+                                    <?php foreach ($studentPhotoOptions as $path => $label): ?>
+                                        <option value="<?= $path ?>"><?= $label ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small>Assign an approved lab workstation photo</small>
                             </label>
 
                             <label>

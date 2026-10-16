@@ -4,11 +4,11 @@ DirectoryIndex index.php index.html
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Enforce HTTPS redirect now that SSL certificate is active
-    RewriteCond %{HTTPS} off
-    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
-    RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # Note: Enable HTTPS redirect after local ISP DNS caches have fully updated to SSL IP 162.210.96.127
+    # RewriteCond %{HTTPS} off
+    # RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    # RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
 <IfModule mod_headers.c>

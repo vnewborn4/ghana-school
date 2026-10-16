@@ -177,7 +177,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 }
 
 // Fetch all active students for selectors
-$allStudents = db()->query('SELECT id, public_code, first_name, display_name, age_band, interest_area, current_focus, profile_summary, favorite_subject, strengths, aspirations, access_pin, active FROM student_journeys ORDER BY first_name ASC')->fetchAll();
+$allStudents = db()->query('SELECT * FROM student_journeys ORDER BY first_name ASC')->fetchAll();
 
 // Fetch current active student record if selected
 $studentData = null;

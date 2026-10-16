@@ -4,6 +4,7 @@ require_once __DIR__ . '/security.php';
 add_security_headers();
 $pageTitle = isset($pageTitle) ? $pageTitle : 'Mill Creek-AR Learning Center';
 $pageDescription = isset($pageDescription) ? $pageDescription : 'Technology education and mentorship for young people in Accra, Ghana.';
+$pageImage = isset($pageImage) ? $pageImage : app_url('assets/images/mill-creek-crest.jpeg');
 $currentPage = basename(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : 'index.php');
 function nav_active($page, $currentPage) { return $page === $currentPage ? ' aria-current="page" class="nav-link active"' : ' class="nav-link"'; }
 ?>
@@ -13,6 +14,10 @@ function nav_active($page, $currentPage) { return $page === $currentPage ? ' ari
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?> | Mill Creek-AR Learning Center">
+    <meta property="og:description" content="<?= htmlspecialchars($pageDescription) ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($pageImage) ?>">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#133d34">
     <title><?= htmlspecialchars($pageTitle) ?> | Mill Creek-AR Learning Center</title>
     <link rel="icon" type="image/svg+xml" href="<?= app_url('assets/images/brand-mark.svg') ?>">

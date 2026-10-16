@@ -177,9 +177,19 @@ include 'includes/header.php';
             <h1>Central Administration</h1>
             <p>Manage Accra student profiles, review classroom learning milestones, and reconcile donor sponsorships.</p>
         </div>
-        <div class="button-row">
-            <a class="button button-gold" href="<?= app_url('profile_studio.php') ?>">Open Lab & Student Studio ↗</a>
-            <a class="button button-light" href="<?= app_url('portal.php') ?>">Donor Dashboard</a>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+            <?php $adminUser = current_user(); ?>
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.12);padding:6px 16px 6px 8px;border-radius:99px;border:1px solid rgba(240,184,75,0.35)">
+                <img src="<?= app_url('assets/images/van-newborn-square.jpeg') ?>" alt="Van Newborn" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:1.5px solid var(--gold);display:block">
+                <div style="text-align:left">
+                    <strong style="color:#fff;display:block;font-size:0.85rem;line-height:1.2"><?= htmlspecialchars($adminUser ? $adminUser['first_name'] . ' ' . $adminUser['last_name'] : 'Van Newborn') ?></strong>
+                    <span style="color:var(--gold);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:700">Master Administrator</span>
+                </div>
+            </div>
+            <div class="button-row">
+                <a class="button button-gold" href="<?= app_url('profile_studio.php') ?>">Open Lab & Student Studio ↗</a>
+                <a class="button button-light" href="<?= app_url('portal.php') ?>">Donor Dashboard</a>
+            </div>
         </div>
     </div>
 </section>

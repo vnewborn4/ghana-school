@@ -126,11 +126,13 @@ HTML;
  */
 function send_mail($to, $subject, $html) {
     $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'millcreek-ar-learning.com';
-    $from = 'noreply@' . $host;
+    $cleanHost = ($host === 'localhost' || $host === '127.0.0.1') ? 'millcreek-ar-learning.com' : $host;
+    $from = 'info@' . $cleanHost;
     $headers = "MIME-Version: 1.0\r\n"
         . "Content-type: text/html; charset=UTF-8\r\n"
         . "From: Mill Creek-AR Learning Center <$from>\r\n"
+        . "Reply-To: Mill Creek-AR Learning Center <$from>\r\n"
         . "X-Mailer: PHP/" . phpversion();
 
-    return (bool)mail($to, $subject, $html, $headers);
+    return (bool)mail($to, $subject, $html, $headers, '-f' . $from);
 }

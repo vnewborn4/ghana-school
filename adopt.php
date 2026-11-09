@@ -10,11 +10,11 @@ include 'includes/header.php';
 <section class="section"><div class="wrap">
 <div class="zeffy-banner" style="background:#fff;border:2px solid var(--forest);border-radius:var(--radius);padding:26px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:38px;box-shadow:var(--shadow);flex-wrap:wrap">
   <div>
-    <span class="eyebrow" style="margin-bottom:6px">Direct Support · 100% Free for Nonprofits</span>
-    <h3 style="margin:0;font-size:1.45rem">Make an immediate gift through our official Zeffy campaign</h3>
-    <p style="margin:6px 0 0;color:var(--muted);max-width:620px">No platform fees are deducted from your donation. Every dollar directly funds computers, internet connectivity, and programming instruction for our students in Accra.</p>
+    <span class="eyebrow" style="margin-bottom:6px">Every Gift Counts &bull; 100% Free for Nonprofits</span>
+    <h3 style="margin:0;font-size:1.45rem">Support with a one-time gift of any amount</h3>
+    <p style="margin:6px 0 0;color:var(--muted);max-width:640px">Whether it's $5, $15, $25, or whatever you can spare, no one is priced out. Every single dollar directly powers computers, broadband internet, and code instruction for young learners in Accra. Zero platform fees are deducted.</p>
   </div>
-  <a class="button button-gold" href="https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-through-it" target="_blank" rel="noopener">Give on Zeffy <span aria-hidden="true">↗</span></a>
+  <a class="button button-gold" href="https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-through-it" target="_blank" rel="noopener">Give Any Amount on Zeffy <span aria-hidden="true">↗</span></a>
 </div>
 
 <?php if ($loadError): ?>

@@ -8,17 +8,17 @@ include 'includes/header.php';
 ?>
 <section class="page-hero"><div class="wrap"><span class="eyebrow">Give or sponsor a learning journey</span><h1>Help keep technology learning within reach.</h1><p class="lede">Give any amount to support the learning center, or choose a privacy-safe student journey based on interests and goals. Profiles never publish full names, schools, family circumstances, or direct contact details.</p></div></section>
 <section class="section"><div class="wrap">
-<div class="zeffy-banner" style="background:#fff;border:2px solid var(--forest);border-radius:var(--radius);padding:26px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:30px;box-shadow:var(--shadow);flex-wrap:wrap">
+<div class="zeffy-banner">
   <div>
     <span class="eyebrow" style="margin-bottom:6px">Every Gift Counts &bull; 100% Free for Nonprofits &bull; Cards, Apple Pay, Google Pay</span>
-    <h3 style="margin:0;font-size:1.45rem">Support with a one-time gift of any amount</h3>
+    <h3 style="margin:0;font-size:1.45rem;color:var(--forest)">Support with a one-time gift of any amount</h3>
     <p style="margin:6px 0 0;color:var(--muted);max-width:640px">Whether it's $5, $15, $25, or whatever you can spare, no one is priced out. Every single dollar directly powers computers, broadband internet, and code instruction for young learners in Accra. Zero platform fees are deducted.</p>
   </div>
   <a class="button button-gold" href="https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-through-it" target="_blank" rel="noopener">Give Any Amount on Zeffy <span aria-hidden="true">↗</span></a>
 </div>
 
 <!-- Institutional Giving & Corporate Match Strip -->
-<div class="institutional-strip" style="background:#eef6f3;border:1px solid #c2dbd3;border-radius:var(--radius);padding:20px 24px;margin-bottom:36px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px">
+<div class="institutional-strip">
   <div style="max-width:620px">
     <strong style="color:var(--forest);font-size:1.02rem;display:block;margin-bottom:4px">Double Your Impact With Employer Matching</strong>
     <span style="color:var(--forest-2);font-size:0.88rem;line-height:1.4;display:block">Many companies (Google, Microsoft, Apple, Cisco, AT&T) match employee donations 1:1 or 2:1. Search for <strong>AD2 Alumni Foundation</strong> in your Benevity, CyberGrants, or YourCause workplace giving portal.</span>
@@ -54,7 +54,7 @@ include 'includes/header.php';
                 <div><dt>Current focus</dt><dd><?= htmlspecialchars($journey['current_focus']) ?></dd></div>
                 <div><dt>Looking ahead</dt><dd><?= htmlspecialchars($journey['aspirations'] ?: 'Not yet added') ?></dd></div>
             </dl>
-            <a class="button" href="signup.php?journey=<?= urlencode($journey['public_code']) ?>">Sponsor <?= htmlspecialchars($journey['first_name']) ?>’s journey <span aria-hidden="true">→</span></a>
+            <a class="button button-gold" href="signup.php?journey=<?= urlencode($journey['public_code']) ?>">Sponsor <?= htmlspecialchars($journey['first_name']) ?>’s journey <span aria-hidden="true">→</span></a>
         </div>
     </article>
 <?php endforeach; ?>

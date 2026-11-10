@@ -8,7 +8,9 @@ $pageImage = isset($pageImage) ? (strpos($pageImage, 'http') === 0 ? $pageImage 
 $currentPage = basename(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : 'index.php');
 $canonicalUrl = 'https://millcreek-ar-learning.com/' . ($currentPage === 'index.php' ? '' : $currentPage);
 $pageImageAbs = strpos($pageImage, 'http') === 0 ? $pageImage : 'https://millcreek-ar-learning.com/' . ltrim($pageImage, '/');
-function nav_active($page, $currentPage) { return $page === $currentPage ? ' aria-current="page" class="nav-link active"' : ' class="nav-link"'; }
+if (!function_exists('nav_active')) {
+    function nav_active($page, $currentPage) { return $page === $currentPage ? ' aria-current="page" class="nav-link active"' : ' class="nav-link"'; }
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -57,7 +59,7 @@ function nav_active($page, $currentPage) { return $page === $currentPage ? ' ari
     <div class="announcement">A learning initiative in Accra, Ghana, in conjunction with the AD2 Alumni Foundation</div>
     <div class="nav-wrap">
         <a class="brand" href="<?= app_url('index.php') ?>" aria-label="Mill Creek-AR Learning Center home">
-            <img class="brand-crest" src="<?= app_url('assets/images/mill-creek-crest.jpeg') ?>" alt="Mill Creek-AR Crest" width="46" height="46">
+            <img class="brand-crest" src="<?= app_url('assets/images/mill-creek-crest.jpeg') ?>" alt="Mill Creek-AR Crest" width="44" height="44">
             <span><strong>Mill Creek-AR</strong><small>Learning Center · Accra</small></span>
         </a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span><span class="sr-only">Open menu</span></button>

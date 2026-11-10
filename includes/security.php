@@ -94,9 +94,9 @@ function is_email_verified($user_id) {
  * Webhook signature verification (generic HMAC-SHA256)
  */
 function verify_webhook_signature($payload, $secret, $signature) {
-    $body = json_encode($payload);
+    $body = is_string($payload) ? $payload : json_encode($payload);
     $expected = 'sha256=' . hash_hmac('sha256', $body, $secret);
-    return hash_equals($expected, $signature);
+    return hash_equals($expected, $signature) || hash_equals(hash_hmac('sha256', $body, $secret), $signature);
 }
 
 /**

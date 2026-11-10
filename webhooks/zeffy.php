@@ -31,8 +31,8 @@ if (!$webhook_secret) {
 $body = file_get_contents('php://input');
 $signature = $_SERVER['HTTP_X_ZEFFY_SIGNATURE'] ?? '';
 
-// Verify signature (Zeffy uses HMAC-SHA256)
-if (!verify_webhook_signature(json_decode($body, true) ?? [], $webhook_secret, $signature)) {
+// Verify signature (Zeffy uses HMAC-SHA256 on raw body)
+if (!verify_webhook_signature($body, $webhook_secret, $signature)) {
     http_response_code(403);
     exit('Invalid signature');
 }

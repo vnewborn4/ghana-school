@@ -6,6 +6,8 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'Mill Creek-AR Learning Center';
 $pageDescription = isset($pageDescription) ? $pageDescription : 'Technology education and mentorship for young people in Accra, Ghana.';
 $pageImage = isset($pageImage) ? (strpos($pageImage, 'http') === 0 ? $pageImage : app_url($pageImage)) : app_url('assets/images/mill-creek-crest.jpeg');
 $currentPage = basename(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : 'index.php');
+$canonicalUrl = 'https://millcreek-ar-learning.com/' . ($currentPage === 'index.php' ? '' : $currentPage);
+$pageImageAbs = strpos($pageImage, 'http') === 0 ? $pageImage : 'https://millcreek-ar-learning.com/' . ltrim($pageImage, '/');
 function nav_active($page, $currentPage) { return $page === $currentPage ? ' aria-current="page" class="nav-link active"' : ' class="nav-link"'; }
 ?>
 <!doctype html>
@@ -14,15 +16,40 @@ function nav_active($page, $currentPage) { return $page === $currentPage ? ' ari
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
+    <link rel="canonical" href="<?= htmlspecialchars($canonicalUrl) ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Mill Creek-AR Learning Center">
+    <meta property="og:url" content="<?= htmlspecialchars($canonicalUrl) ?>">
     <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?> | Mill Creek-AR Learning Center">
     <meta property="og:description" content="<?= htmlspecialchars($pageDescription) ?>">
-    <meta property="og:image" content="<?= htmlspecialchars($pageImage) ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($pageImageAbs) ?>">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= htmlspecialchars($pageTitle) ?> | Mill Creek-AR Learning Center">
+    <meta name="twitter:description" content="<?= htmlspecialchars($pageDescription) ?>">
+    <meta name="twitter:image" content="<?= htmlspecialchars($pageImageAbs) ?>">
     <meta name="theme-color" content="#133d34">
     <title><?= htmlspecialchars($pageTitle) ?> | Mill Creek-AR Learning Center</title>
     <link rel="icon" type="image/svg+xml" href="<?= app_url('assets/images/brand-mark.svg') ?>">
     <link rel="stylesheet" href="<?= app_url('assets/css/style.css') ?>">
     <script defer src="<?= app_url('assets/js/site.js') ?>"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NGO",
+      "name": "Mill Creek-AR Learning Center",
+      "url": "https://millcreek-ar-learning.com/",
+      "logo": "https://millcreek-ar-learning.com/assets/images/mill-creek-crest.jpeg",
+      "description": "Technology education, Python coding instruction, and mentorship for young people in Accra, Ghana.",
+      "funder": {
+        "@type": "Organization",
+        "name": "AD2 Alumni Foundation",
+        "taxID": "47-1468217"
+      },
+      "sameAs": [
+        "https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-through-it"
+      ]
+    }
+    </script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -51,7 +78,7 @@ function nav_active($page, $currentPage) { return $page === $currentPage ? ' ari
             <?php else: ?>
                 <a<?= nav_active('login.php', $currentPage) ?> href="<?= app_url('login.php') ?>">Sign in</a>
             <?php endif; ?>
-            <a<?= nav_active('adopt.php', $currentPage) ?> href="<?= app_url('adopt.php') ?>">Sponsor a journey</a>
+            <a<?= nav_active('adopt.php', $currentPage) ?> href="<?= app_url('adopt.php') ?>">Give or sponsor</a>
         </nav>
     </div>
 </header>

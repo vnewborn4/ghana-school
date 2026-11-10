@@ -20,5 +20,5 @@ $pageTitle='Sponsor Sign In'; $pageDescription='Sign in to view sponsorship stat
 <label>Email address<input type="email" name="email" autocomplete="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"></label>
 <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
 <div style="display:flex;justify-content:flex-end;margin:-8px 0 16px"><a href="<?= app_url('forgot_password.php') ?>" style="font-size:0.88rem;color:var(--forest-2);font-weight:700">Forgot password?</a></div>
-<button class="button full" type="submit">Sign in <span aria-hidden="true">→</span></button><p class="account-prompt">New sponsor? <a href="<?= app_url('adopt.php') ?>">Choose a student journey</a></p></form></div></section>
+<button class="button full" type="submit">Sign in <span aria-hidden="true">→</span></button><p class="account-prompt">New supporter? <a href="<?= app_url('adopt.php') ?>">Explore ways to give</a></p></form></div></section>
 <?php include 'includes/footer.php'; ?>

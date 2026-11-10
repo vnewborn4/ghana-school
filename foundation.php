@@ -11,5 +11,42 @@ include 'includes/header.php';
 
 <section class="section forest"><div class="wrap grid-2"><div><span class="eyebrow light">How the partnership is designed to work</span><h2>Vision with structure behind it.</h2><p class="lede" style="color:#d7e3df">Mill Creek-AR Learning Center brings the local educational vision. The AD² Alumni Foundation partnership is intended to strengthen the support system around that vision.</p></div><div><ul class="value-list"><li><strong>Stewardship</strong><span>Build clear donation, budgeting, and reporting practices around the project.</span></li><li><strong>Alumni engagement</strong><span>Invite mentors and technical professionals to contribute relevant experience.</span></li><li><strong>Continuity</strong><span>Help the learning center plan for sustained instruction rather than one-time activity.</span></li><li><strong>Accountability</strong><span>Publish verified goals, program updates, and financial information as the initiative develops.</span></li></ul></div></div></section>
 
-<section class="section"><div class="wrap grid-2"><div><span class="eyebrow">Transparency and governance</span><h2>Verified foundation credentials and accountability.</h2><p>The AD2 Alumni Foundation is an incorporated domestic non-profit organization in good standing. Its Articles of Incorporation and official Reinstatement Certificate were certified on October 15, 2026 by the Louisiana Secretary of State (Charter #42080979N), operating with an active Employer Identification Number (EIN) issued by the IRS for educational and charitable development.</p><p>This learning-center partnership brings alumni experience, responsible stewardship, and long-term educational backing directly to the students and instructional staff in Accra. The partnership operates independently and does not imply endorsement by Louisiana Tech University, Omega Psi Phi Fraternity, Inc., or the film <em>Akeelah and the Bee</em>.</p></div><div class="source-list"><h3>Public references</h3><a href="https://www.mightyninth.com/chapter_page.php?ChapterNumber=310&amp;title=Alpha+Delta+Delta" target="_blank" rel="noopener">Omega Psi Phi Ninth District: Alpha Delta Delta chapter history <span aria-hidden="true">↗</span></a><a href="https://www.mightyninth.com/Documents/Publications/The%20Source/The%20Source%20-%20Vol.%2020%281%29%20Spring%202011.pdf" target="_blank" rel="noopener">Ninth District archive: education and mentoring activities <span aria-hidden="true">↗</span></a><a href="https://www.spotfund.com/organization/b1673a46-973f-4231-9acf-f327065a531e" target="_blank" rel="noopener">Public nonprofit directory listing <span aria-hidden="true">↗</span></a></div></div></section>
+<section class="section"><div class="wrap grid-2"><div>
+    <span class="eyebrow">Transparency and governance</span>
+    <h2>Verified foundation credentials and accountability.</h2>
+    <p>The AD2 Alumni Foundation is an incorporated 501(c)(3) domestic non-profit organization in good standing. Its Articles of Incorporation and official Reinstatement Certificate were certified on October 15, 2026 by the Louisiana Secretary of State (Charter #42080979N), operating with an active Employer Identification Number (EIN) issued by the IRS for educational and charitable youth development.</p>
+    
+    <div class="ein-box" style="background:#fff;border:1.5px solid var(--forest);border-radius:12px;padding:20px 24px;margin:24px 0;box-shadow:var(--shadow)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+            <div>
+                <span style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--forest-2);font-weight:700;display:block">Federal Tax ID / Workplace Matching</span>
+                <strong style="font-size:1.45rem;color:var(--forest);font-family:monospace;letter-spacing:0.04em">EIN: 47-1468217</strong>
+            </div>
+            <button type="button" class="button button-gold copy-ein-btn" data-ein="47-1468217" style="padding:10px 20px;font-size:0.9rem">
+                Copy EIN for Employer Match
+            </button>
+        </div>
+        <p style="margin:12px 0 0;font-size:0.88rem;color:var(--muted)">Use this EIN to submit matching gifts through Benevity, CyberGrants, YourCause, or your corporate payroll giving portal.</p>
+    </div>
+
+    <p>This learning-center partnership brings alumni experience, responsible stewardship, and long-term educational backing directly to the students and instructional staff in Accra. The partnership operates independently and does not imply endorsement by Louisiana Tech University, Omega Psi Phi Fraternity, Inc., or the film <em>Akeelah and the Bee</em>.</p>
+</div>
+
+<div>
+    <div class="source-list" style="margin-bottom:28px">
+        <h3>Certified Foundation Documents (PDF)</h3>
+        <p style="font-size:0.9rem;color:var(--muted);margin-top:-6px;margin-bottom:14px">Direct downloads of official state and federal filings:</p>
+        <a href="<?= app_url('docs/foundation/AD2_Alumni_Foundation_EIN_Letter.pdf') ?>" target="_blank" rel="noopener">📄 IRS Federal EIN Notice (CP 575 E) <span aria-hidden="true">↓ PDF</span></a>
+        <a href="<?= app_url('docs/foundation/AD2_Alumni_Foundation_Reinstatement_Certificate_2026-10-15.pdf') ?>" target="_blank" rel="noopener">📄 Louisiana Secretary of State Reinstatement Certificate <span aria-hidden="true">↓ PDF</span></a>
+        <a href="<?= app_url('docs/foundation/AD2_Alumni_Foundation_Articles_of_Incorporation.pdf') ?>" target="_blank" rel="noopener">📄 AD² Articles of Incorporation <span aria-hidden="true">↓ PDF</span></a>
+    </div>
+
+    <div class="source-list">
+        <h3>Public references & archives</h3>
+        <a href="https://www.mightyninth.com/chapter_page.php?ChapterNumber=310&amp;title=Alpha+Delta+Delta" target="_blank" rel="noopener">Omega Psi Phi Ninth District: Alpha Delta Delta chapter history <span aria-hidden="true">↗</span></a>
+        <a href="https://www.mightyninth.com/Documents/Publications/The%20Source/The%20Source%20-%20Vol.%2020%281%29%20Spring%202011.pdf" target="_blank" rel="noopener">Ninth District archive: education and mentoring activities <span aria-hidden="true">↗</span></a>
+        <a href="https://www.spotfund.com/organization/b1673a46-973f-4231-9acf-f327065a531e" target="_blank" rel="noopener">Public nonprofit directory listing <span aria-hidden="true">↗</span></a>
+    </div>
+</div>
+</div></section>
 <?php include 'includes/footer.php'; ?>

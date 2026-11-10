@@ -24,3 +24,4 @@ $RECYCLE.BIN/
 *.log
 error_log
 php_errors.log
+.agent-tasks/

@@ -4,7 +4,11 @@ DirectoryIndex index.php index.html
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Enforce HTTPS globally on production domain
+    # Redirect all production traffic from millcreek-ar-learning.com to canonical Site B (millcreek-learning.com)
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    RewriteRule ^(.*)$ https://millcreek-learning.com/$1 [R=301,L]
+
+    # Enforce HTTPS globally on local/staging domain
     RewriteCond %{HTTPS} off
     RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
     RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]

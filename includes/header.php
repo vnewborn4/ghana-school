@@ -1,4 +1,11 @@
 <?php
+// Canonical 301 redirect from Site A to Site B
+$host = $_SERVER['HTTP_HOST'] ?? '';
+if (!in_array($host, ['localhost', '127.0.0.1']) && !str_starts_with($host, 'localhost:') && !str_starts_with($host, '127.0.0.1:')) {
+    header("Location: https://millcreek-learning.com/", true, 301);
+    exit();
+}
+
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/security.php';
 add_security_headers();

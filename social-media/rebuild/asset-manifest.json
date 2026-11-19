@@ -1,0 +1,15 @@
+{
+  "assets": [
+    {"path": "assets/images/classroom-coding-close.jpeg", "role": "authentic classroom photography", "source": "repository"},
+    {"path": "assets/images/classroom-coding-wide.jpeg", "role": "authentic classroom photography", "source": "repository"},
+    {"path": "assets/images/classroom-group-portrait.jpeg", "role": "authentic classroom photography", "source": "repository"},
+    {"path": "assets/images/mill-creek-icon-transparent.png", "role": "program mark", "source": "repository"},
+    {"path": "assets/videos/classroom-showcase-1.mp4", "role": "authentic classroom B-roll", "source": "repository"},
+    {"path": "assets/videos/classroom-showcase-2.mp4", "role": "authentic classroom B-roll", "source": "repository"},
+    {"path": "assets/videos/IMG_3379.MOV", "role": "authentic classroom B-roll", "source": "repository"},
+    {"path": "assets/videos/IMG_3677.MOV", "role": "authentic classroom B-roll", "source": "repository"},
+    {"path": "assets/videos/IMG_3694.MOV", "role": "authentic classroom B-roll", "source": "repository"},
+    {"path": "assets/videos/IMG_3698.MOV", "role": "authentic classroom B-roll", "source": "repository"}
+  ],
+  "narration": {"path": "social-media/rebuild/audio/narration.wav", "status": "staged", "voice": "Van voice (master 48kHz)", "avatar": false}
+}

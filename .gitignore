@@ -25,3 +25,6 @@ $RECYCLE.BIN/
 error_log
 php_errors.log
 .agent-tasks/
+social-media/work/
+social-media/exports/*.mp4
+social-media/rebuild/__pycache__/

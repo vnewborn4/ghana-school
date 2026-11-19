@@ -1,0 +1,34 @@
+{
+  "campaign": "Mill Creek-AR Learning Center",
+  "status": "professional Descript visual assembly complete; narration audio staged and verified",
+  "descript": {
+    "project_id": "c2709dad-d6a7-409b-8651-71f66ff4e5c2",
+    "composition_id": "3e9b12a8-9b0d-4ed4-95f0-8a33ea604359",
+    "composition_name": "Master Vertical",
+    "duration_seconds": 57,
+    "project_url": "https://web.descript.com/c2709dad-d6a7-409b-8651-71f66ff4e5c2/3e9b1",
+    "published": false
+  },
+  "direction": "documentary first",
+  "voice": {
+    "service": "Approved Master Narration (Van voice)",
+    "name": "Van voice",
+    "provider": "ElevenLabs Van voice",
+    "avatar": false,
+    "delivery": "calm, reflective, natural pauses",
+    "source_status": "active: social-media/rebuild/audio/narration.wav staged (51.1s, 48kHz broadcast master)"
+  },
+  "visual_system": {
+    "footage": "authentic classroom footage and photography",
+    "palette": ["#FFFFFF", "#F8F3E8", "#E9B949", "#101815"],
+    "typography": ["Bahnschrift", "Segoe UI Semibold"],
+    "rules": [
+      "full-bleed photography",
+      "one dominant message per frame",
+      "no persistent card frame",
+      "no decorative particles",
+      "no invented outcomes or hardship framing"
+    ]
+  },
+  "publication_gate": "Confirm guardian/media consent and reverify time-sensitive program and donation facts before posting."
+}

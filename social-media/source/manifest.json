@@ -1,0 +1,42 @@
+{
+  "campaign": "Mill Creek-AR Learning Center social campaign",
+  "message": "Talent is everywhere. Opportunity is not.",
+  "website": "https://millcreek-ar-learning.com/",
+  "donation_url": "https://millcreek-ar-learning.com/adopt.php",
+  "style": {
+    "direction": "documentary Swiss precision",
+    "colors": {
+      "forest": "#133D34",
+      "forest_light": "#1D5749",
+      "gold": "#F0B84B",
+      "cream": "#F6F0E4",
+      "paper": "#FFFDFA",
+      "ink": "#17231F"
+    },
+    "font": "Segoe UI Semibold",
+    "motion": "hard cuts, restrained gold wipes, stable captions",
+    "exclusions": [
+      "no hardship framing",
+      "no invented student outcomes",
+      "no unsupported fundraising totals",
+      "no decorative particles",
+      "no stretched footage"
+    ]
+  },
+  "voice": {
+    "source": "assets/audio/mill-creek-promo-narration-van-v1.mp3",
+    "speaker": "Van Newborn",
+    "speed": 1.0,
+    "master_duration_seconds": 51.644081,
+    "mix_target": "approximately -16 LUFS integrated, -1.5 dBTP ceiling"
+  },
+  "source_videos": [
+    "assets/videos/classroom-showcase-1.mp4",
+    "assets/videos/classroom-showcase-2.mp4",
+    "assets/videos/IMG_3379.MOV",
+    "assets/videos/IMG_3677.MOV",
+    "assets/videos/IMG_3694.MOV",
+    "assets/videos/IMG_3698.MOV"
+  ],
+  "publication_gate": "Confirm guardian/media consent for identifiable students and reverify time-sensitive program facts before posting."
+}
